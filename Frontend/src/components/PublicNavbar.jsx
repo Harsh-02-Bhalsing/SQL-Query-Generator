@@ -12,8 +12,7 @@ const PublicNavbar = () => {
 
         {/* Navigation */}
         <div className="flex items-center gap-6">
-          <Link to="/"
-            href="#features"
+          <Link to="/login"
             className="text-sm text-[#9ca3af] hover:text-[#eaeaea] transition"
           >
             Login
