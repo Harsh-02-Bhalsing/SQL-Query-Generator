@@ -1,10 +1,13 @@
-import QuoteGenerator from "./components/QuoteGenerator";
-
+import {Routes,Route} from "react-router-dom"
+import Landing from "./pages/Landing"
+import PublicLayout from "./layouts/PublicLayout";
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-8 bg-gray-50 dark:bg-gray-900">
-      <QuoteGenerator />
-    </div>
+    <Routes>
+      <Route element={<PublicLayout/>}>
+        <Route path="/" element={<Landing/>}/>
+      </Route>
+    </Routes>
   );
 }
 
