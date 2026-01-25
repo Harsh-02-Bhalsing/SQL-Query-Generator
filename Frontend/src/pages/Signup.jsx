@@ -1,5 +1,8 @@
 import { useState } from "react";
-import {Link} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase";
+
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -7,13 +10,19 @@ const Signup = () => {
   const [errors, setErrors] = useState({
     email: "",
     password: "",
+    firebase: "",
   });
 
-  const handleSubmit = () => {
-    let newErrors = { email: "", password: "" };
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    let newErrors = { email: "", password: "", firebase: "" };
     let isValid = true;
 
-    // Email validation
+    // Client-side validation
     if (!email) {
       newErrors.email = "Email is required";
       isValid = false;
@@ -22,18 +31,39 @@ const Signup = () => {
       isValid = false;
     }
 
-    // Password validation
     if (!password) {
       newErrors.password = "Password is required";
       isValid = false;
     }
 
     setErrors(newErrors);
+    if (!isValid) return;
 
-    if (isValid) {
-      // Static placeholder (no API / auth logic yet)
-      console.log("Signup clicked with:", { email, password });
-      alert("Signup submitted (static UI only)");
+    try {
+      setLoading(true);
+
+      await createUserWithEmailAndPassword(auth, email, password);
+
+      setSuccess(true);
+
+      // Redirect to login after short delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } catch (error) {
+      let message = "Something went wrong. Please try again.";
+
+      if (error.code === "auth/email-already-in-use") {
+        message = "This email is already registered.";
+      } else if (error.code === "auth/weak-password") {
+        message = "Password should be at least 6 characters.";
+      } else if (error.code === "auth/invalid-email") {
+        message = "Invalid email address.";
+      }
+
+      setErrors((prev) => ({ ...prev, firebase: message }));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,6 +88,7 @@ const Signup = () => {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
             className="w-full px-4 py-2 rounded-md bg-[#121212] border border-[#2a2a2a] text-[#eaeaea] placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#333]"
           />
           {errors.email && (
@@ -75,6 +106,7 @@ const Signup = () => {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
             className="w-full px-4 py-2 rounded-md bg-[#121212] border border-[#2a2a2a] text-[#eaeaea] placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#333]"
           />
           {errors.password && (
@@ -82,12 +114,33 @@ const Signup = () => {
           )}
         </div>
 
+        {/* Firebase Error */}
+        {errors.firebase && (
+          <p className="mt-4 text-sm text-red-500 text-center">
+            {errors.firebase}
+          </p>
+        )}
+
+        {/* Success Message */}
+        {success && (
+          <p className="mt-4 text-sm text-green-500 text-center">
+            Account created successfully! Redirecting to login...
+          </p>
+        )}
+
         {/* Submit Button */}
         <button
           onClick={handleSubmit}
-          className="mt-6 w-full px-4 py-2 rounded-md bg-[#2a2a2a] text-[#eaeaea] text-sm font-medium hover:bg-[#333] transition"
+          disabled={loading}
+          className="mt-6 w-full px-4 py-2 rounded-md bg-[#2a2a2a] text-[#eaeaea] text-sm font-medium hover:bg-[#333] transition disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Sign Up
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <div className="h-4 w-4 border-2 border-[#eaeaea] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            "Sign Up"
+          )}
         </button>
 
         <p className="mt-4 text-xs text-[#6b7280] text-center">
