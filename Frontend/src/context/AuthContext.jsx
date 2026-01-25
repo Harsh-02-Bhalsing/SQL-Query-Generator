@@ -1,23 +1,38 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
-  const [userId,setUserId]=useState(null)
+  const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(true); // important for protected routes
 
-  const login = (email,userId) => {
-    setIsAuthenticated(true);
-    setUserEmail(email);
-    setUserId(userId);
-    console.log(userId);
-  };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is logged in
+        setIsAuthenticated(true);
+        setUserEmail(user.email);
+        setUserId(user.uid);
+      } else {
+        // User is logged out
+        setIsAuthenticated(false);
+        setUserEmail(null);
+        setUserId(null);
+      }
+      setLoading(false);
+    });
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUserEmail(null);
-    setUserId(null);
+    // Cleanup listener on unmount
+    return () => unsubscribe();
+  }, []);
+
+  const logout = async () => {
+    await signOut(auth);
+    // State will be cleared automatically by onAuthStateChanged
   };
 
   return (
@@ -25,8 +40,9 @@ export const AuthProvider = ({ children }) => {
       value={{
         isAuthenticated,
         userEmail,
-        login,
+        userId,
         logout,
+        loading,
       }}
     >
       {children}

@@ -4,6 +4,9 @@ import PublicLayout from "./layouts/PublicLayout";
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./pages/Dashboard"
+import PrivateLayout from "./layouts/PrivateLayout";
 function App() {
   return (
     <AuthProvider>
@@ -12,6 +15,12 @@ function App() {
           <Route path="/" element={<Landing/>}/>
           <Route path="/signup" element={<Signup/>} />
           <Route path="/login" element={<Login/>} />
+        </Route>
+        {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>} /> */}
+        <Route element={<PrivateLayout/>}>
+          <Route element={<PrivateRoute/>}>
+            <Route path="/dashboard" element={<Dashboard/>}/>
+          </Route>
         </Route>
       </Routes>
     </AuthProvider>
