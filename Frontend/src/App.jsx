@@ -3,15 +3,18 @@ import Landing from "./pages/Landing"
 import PublicLayout from "./layouts/PublicLayout";
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
+import { AuthProvider } from "./context/AuthContext";
 function App() {
   return (
-    <Routes>
-      <Route element={<PublicLayout/>}>
-        <Route path="/" element={<Landing/>}/>
-        <Route path="/signup" element={<Signup/>} />
-        <Route path="/login" element={<Login/>} />
-      </Route>
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route element={<PublicLayout/>}>
+          <Route path="/" element={<Landing/>}/>
+          <Route path="/signup" element={<Signup/>} />
+          <Route path="/login" element={<Login/>} />
+        </Route>
+      </Routes>
+    </AuthProvider>
   );
 }
 
