@@ -52,7 +52,7 @@ const Login = () => {
       );
 
       // Update Auth Context
-      login(userCredential.user.email);
+      login(userCredential.user.email,userCredential.user.uid);
       setSuccess(true);
 
       // Redirect to dashboard
