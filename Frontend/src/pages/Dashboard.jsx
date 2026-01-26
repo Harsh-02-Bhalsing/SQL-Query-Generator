@@ -71,7 +71,7 @@ const Dashboard = () => {
           {/* Sidebar resize handle */}
           <div
             onMouseDown={startSidebarResize}
-            className="absolute top-0 right-0 h-full w-[4px] cursor-col-resize bg-transparent hover:bg-[#555]"
+            className="absolute top-0 right-0 h-full w-[4px] cursor-col-resize bg-transparent hover:bg-[blue]"
           />
         </div>
       ) : (
@@ -88,18 +88,18 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Input Section */}
-        <div style={{ height: `${topHeight}%` }} className="p-4">
+        <div style={{ height: `${topHeight}%` }} className="p-2">
           <QueryInputPanel />
         </div>
 
         {/* Minimal divider */}
         <div
           onMouseDown={startVerticalResize}
-          className="h-[2px] bg-[#2a2a2a] cursor-row-resize hover:bg-[#444]"
+          className="h-[2px] bg-[#red] cursor-row-resize hover:bg-[blue]"
         />
 
         {/* Output Section */}
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-0">
           <QueryOutputPanel />
         </div>
       </div>
