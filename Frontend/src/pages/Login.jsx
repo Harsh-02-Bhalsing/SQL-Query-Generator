@@ -18,7 +18,7 @@ const Login = () => {
   const [success, setSuccess] = useState(false);
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  
 
   const handleLoginClick = async () => {
     let newErrors = { email: "", password: "", firebase: "" };
@@ -52,7 +52,7 @@ const Login = () => {
       );
 
       // Update Auth Context
-      login(userCredential.user.email);
+      
       setSuccess(true);
 
       // Redirect to dashboard
