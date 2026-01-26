@@ -103,7 +103,7 @@ const QueryInputPanel = () => {
             return (
               <div
                 key={idx}
-                className="self-end max-w-[80%] bg-[#2a2a2a] px-4 py-2 rounded-lg text-sm"
+                className="self-end max-w-[80%] bg-[#2a2a2a] px-4 py-2 rounded-lg text-xs"
               >
                 {msg.text}
               </div>
@@ -112,7 +112,7 @@ const QueryInputPanel = () => {
 
           if (msg.type === "loading") {
             return (
-              <div key={idx} className="text-sm text-gray-400">
+              <div key={idx} className="text-xs text-gray-400">
                 Generating SQL…
               </div>
             );
@@ -138,12 +138,12 @@ const QueryInputPanel = () => {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask your question in natural language..."
           disabled={loading}
-          className="flex-1 bg-[#121212] border border-[#2a2a2a] rounded-md px-4 py-2 text-sm text-[#eaeaea] placeholder-[#6b7280] focus:outline-none focus:ring-1 focus:ring-[#444]"
+          className="flex-1 bg-[#121212] border border-[#2a2a2a] rounded-md px-4 py-2 text-xs text-[#eaeaea] placeholder-[#6b7280] focus:outline-none focus:ring-1 focus:ring-[#444]"
         />
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="px-4 py-2 rounded-md bg-[#2a2a2a] hover:bg-[#333] text-sm disabled:opacity-50"
+          className="px-4 py-2 rounded-md bg-[#2a2a2a] hover:bg-[#333] text-xs disabled:opacity-50"
         >
           Send
         </button>

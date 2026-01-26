@@ -10,7 +10,7 @@ const GeneratedQueryCard = ({ data }) => {
   return (
     <div className="space-y-2 max-w-[85%]">
       {/* Response Card */}
-      <div className="bg-[#232323] border border-[#2f2f2f] rounded-lg p-4 text-sm relative">
+      <div className="bg-[#232323] border border-[#2f2f2f] rounded-lg p-4 text-xs relative">
         {/* Copy */}
         <button
           onClick={copyQuery}

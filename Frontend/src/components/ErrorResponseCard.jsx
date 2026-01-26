@@ -4,7 +4,7 @@ const ErrorResponseCard = ({ data }) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-[#232323] border border-[#2f2f2f] rounded-lg p-4 text-sm text-red-400 relative max-w-[85%]">
+    <div className="bg-[#232323] border border-[#2f2f2f] rounded-lg p-4 text-xs text-red-400 relative max-w-[85%]">
       <p>{data.error}</p>
 
       {expanded && (
