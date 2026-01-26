@@ -1,19 +1,19 @@
 import { useState } from "react";
-import {Link} from "react-router-dom"
-const Signup = () => {
+import { Link } from "react-router-dom";
+
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [errors, setErrors] = useState({
     email: "",
     password: "",
   });
 
-  const handleSubmit = () => {
+  const handleLoginClick = () => {
+
     let newErrors = { email: "", password: "" };
     let isValid = true;
 
-    // Email validation
     if (!email) {
       newErrors.email = "Email is required";
       isValid = false;
@@ -32,8 +32,8 @@ const Signup = () => {
 
     if (isValid) {
       // Static placeholder (no API / auth logic yet)
-      console.log("Signup clicked with:", { email, password });
-      alert("Signup submitted (static UI only)");
+      console.log("login clicked with:", { email, password });
+      alert("logged in (static UI only)");
     }
   };
 
@@ -41,11 +41,11 @@ const Signup = () => {
     <div className="flex items-center justify-center px-6 py-20">
       <div className="w-full max-w-md bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 shadow-lg">
         <h2 className="text-2xl font-semibold text-[#eaeaea] text-center">
-          Create your account
+          Welcome back
         </h2>
 
         <p className="mt-2 text-sm text-[#9ca3af] text-center">
-          Sign up to start generating SQL queries
+          Log in to continue using SQL Query Generator
         </p>
 
         {/* Email */}
@@ -82,18 +82,19 @@ const Signup = () => {
           )}
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
-          onClick={handleSubmit}
+          onClick={handleLoginClick}
           className="mt-6 w-full px-4 py-2 rounded-md bg-[#2a2a2a] text-[#eaeaea] text-sm font-medium hover:bg-[#333] transition"
         >
-          Sign Up
+          Log In
         </button>
 
+        {/* Signup link */}
         <p className="mt-4 text-xs text-[#6b7280] text-center">
-          Already have an account?{" "}
-          <Link to="/login" className="text-[#eaeaea] hover:underline">
-            Login
+          Don’t have an account?{" "}
+          <Link to="/signup" className="text-[#eaeaea] hover:underline">
+            Sign up
           </Link>
         </p>
       </div>
@@ -101,4 +102,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;
