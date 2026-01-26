@@ -8,46 +8,52 @@ const GeneratedQueryCard = ({ data }) => {
   };
 
   return (
-    <div className="bg-[#252526] border border-[#333] rounded-md p-4 text-sm">
-      <div className="flex justify-between items-start">
-        <pre className="text-[#eaeaea] whitespace-pre-wrap">
-          {data.query}
-        </pre>
-
+    <div className="space-y-2 max-w-[85%]">
+      {/* Response Card */}
+      <div className="bg-[#232323] border border-[#2f2f2f] rounded-lg p-4 text-sm relative">
+        {/* Copy */}
         <button
           onClick={copyQuery}
-          className="text-xs text-gray-400 hover:text-white"
+          className="absolute top-1 right-3 text-xs text-gray-400 hover:text-gray-200"
         >
           Copy
         </button>
+
+        {/* Query */}
+        <pre className="text-[#eaeaea] whitespace-pre-wrap pr-10">
+          {data.query}
+        </pre>
+
+        {/* Expanded Info */}
+        {expanded && (
+          <div className="mt-3 text-xs text-gray-400 space-y-1">
+            <p>
+              <span className="text-gray-500">Type:</span> {data.language}
+            </p>
+            <p>
+              <span className="text-gray-500">Details:</span> {data.details}
+            </p>
+          </div>
+        )}
+
+        {/* Show More / Less (bottom-right, fixed position) */}
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="absolute bottom-1 right-3 text-xs text-gray-400 hover:text-gray-200"
+        >
+          {expanded ? "Show less" : "Show more"}
+        </button>
       </div>
 
-      <div className="flex gap-3 mt-3">
-        <button className="px-3 py-1 text-xs bg-[#2a2a2a] rounded hover:bg-[#333]">
+      {/* Action Buttons (outside card) */}
+      <div className="flex justify-end gap-2">
+        <button className="px-3 py-1.5 text-xs rounded-md bg-[#2d2d2d] hover:bg-[#3a3a3a] transition">
           Execute
         </button>
-        <button className="px-3 py-1 text-xs bg-[#2a2a2a] rounded hover:bg-[#333]">
+        <button className="px-3 py-1.5 text-xs rounded-md bg-[#2d2d2d] hover:bg-[#3a3a3a] transition">
           Save
         </button>
       </div>
-
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="mt-3 text-xs text-gray-400 hover:text-white"
-      >
-        {expanded ? "Show less" : "Show more"}
-      </button>
-
-      {expanded && (
-        <div className="mt-2 text-xs text-gray-400 space-y-1">
-          <p>
-            <span className="text-gray-500">Type:</span> {data.language}
-          </p>
-          <p>
-            <span className="text-gray-500">Details:</span> {data.details}
-          </p>
-        </div>
-      )}
     </div>
   );
 };

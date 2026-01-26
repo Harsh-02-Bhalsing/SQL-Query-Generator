@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import GeneratedQueryCard from "./GeneratedQueryCard";
 import ErrorResponseCard from "./ErrorResponseCard";
@@ -10,6 +10,15 @@ const QueryInputPanel = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const chatContainerRef = useRef(null);
+
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+      chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   /* ---------------- Mock API ---------------- */
   const sendQueryToBackend = async ({ userId, query }) => {
@@ -82,15 +91,19 @@ const QueryInputPanel = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#1f1f1f] rounded-md border border-[#2a2a2a]">
+    <div className="h-full flex flex-col bg-[#1c1c1c] rounded-lg border border-[#2a2a2a]">
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      
+      <div
+        ref={chatContainerRef}
+        className="flex-1 overflow-y-auto p-4 space-y-5"
+      >
         {messages.map((msg, idx) => {
           if (msg.type === "user") {
             return (
               <div
                 key={idx}
-                className="self-end max-w-[80%] bg-[#2a2a2a] px-4 py-2 rounded-md text-sm"
+                className="self-end max-w-[80%] bg-[#2a2a2a] px-4 py-2 rounded-lg text-sm"
               >
                 {msg.text}
               </div>
@@ -116,6 +129,7 @@ const QueryInputPanel = () => {
           return null;
         })}
       </div>
+      
 
       {/* Input Area */}
       <div className="border-t border-[#2a2a2a] p-3 flex items-center gap-3">
