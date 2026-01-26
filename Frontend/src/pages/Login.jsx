@@ -1,19 +1,30 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [errors, setErrors] = useState({
     email: "",
     password: "",
+    firebase: "",
   });
 
-  const handleLoginClick = () => {
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-    let newErrors = { email: "", password: "" };
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const handleLoginClick = async () => {
+    let newErrors = { email: "", password: "", firebase: "" };
     let isValid = true;
 
+    // Email validation
     if (!email) {
       newErrors.email = "Email is required";
       isValid = false;
@@ -29,11 +40,39 @@ const Login = () => {
     }
 
     setErrors(newErrors);
+    if (!isValid) return;
 
-    if (isValid) {
-      // Static placeholder (no API / auth logic yet)
-      console.log("login clicked with:", { email, password });
-      alert("logged in (static UI only)");
+    try {
+      setLoading(true);
+
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Update Auth Context
+      login(userCredential.user.email);
+      setSuccess(true);
+
+      // Redirect to dashboard
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    } catch (error) {
+      let message = "Something went wrong. Please try again.";
+      console.log(error)
+      if (error.code === "auth/invalid-credential") {
+        message = "Invalid Credentials";
+      } else if (error.code === "auth/wrong-password") {
+        message = "Incorrect password.";
+      } else if (error.code === "auth/invalid-email") {
+        message = "Invalid email address.";
+      }
+
+      setErrors((prev) => ({ ...prev, firebase: message }));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,6 +97,7 @@ const Login = () => {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
             className="w-full px-4 py-2 rounded-md bg-[#121212] border border-[#2a2a2a] text-[#eaeaea] placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#333]"
           />
           {errors.email && (
@@ -75,6 +115,7 @@ const Login = () => {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
             className="w-full px-4 py-2 rounded-md bg-[#121212] border border-[#2a2a2a] text-[#eaeaea] placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#333]"
           />
           {errors.password && (
@@ -82,12 +123,33 @@ const Login = () => {
           )}
         </div>
 
+        {/* Firebase Error */}
+        {errors.firebase && (
+          <p className="mt-4 text-sm text-red-500 text-center">
+            {errors.firebase}
+          </p>
+        )}
+
+        {/* Success Message */}
+        {success && (
+          <p className="mt-4 text-sm text-green-500 text-center">
+            Login successful! Redirecting...
+          </p>
+        )}
+
         {/* Submit */}
         <button
           onClick={handleLoginClick}
-          className="mt-6 w-full px-4 py-2 rounded-md bg-[#2a2a2a] text-[#eaeaea] text-sm font-medium hover:bg-[#333] transition"
+          disabled={loading}
+          className="mt-6 w-full px-4 py-2 rounded-md bg-[#2a2a2a] text-[#eaeaea] text-sm font-medium hover:bg-[#333] transition disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Log In
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <div className="h-4 w-4 border-2 border-[#eaeaea] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            "Log In"
+          )}
         </button>
 
         {/* Signup link */}
