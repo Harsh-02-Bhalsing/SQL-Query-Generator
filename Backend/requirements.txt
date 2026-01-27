@@ -2,3 +2,7 @@ fastapi
 uvicorn
 google-generativeai
 python-dotenv
+sqlalchemy
+langchain
+langchain_community
+langchain-google-genai

@@ -10,11 +10,11 @@ const GeneratedQueryCard = ({ data }) => {
   return (
     <div className="space-y-2 max-w-[85%]">
       {/* Response Card */}
-      <div className="bg-[#232323] border border-[#2f2f2f] rounded-lg p-4 text-xs relative">
+      <div className="bg-[#232323] border border-[#2f2f2f] rounded-lg p-4 pb-6 text-xs relative">
         {/* Copy */}
         <button
           onClick={copyQuery}
-          className="absolute top-1 right-3 text-xs text-gray-400 hover:text-gray-200"
+          className="absolute top-1 right-3 text-[0.700rem] text-gray-400 hover:text-gray-200"
         >
           Copy
         </button>
@@ -39,7 +39,7 @@ const GeneratedQueryCard = ({ data }) => {
         {/* Show More / Less (bottom-right, fixed position) */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="absolute bottom-1 right-3 text-xs text-gray-400 hover:text-gray-200"
+          className="absolute bottom-1 right-3 text-[0.700rem] text-gray-400 hover:text-gray-200"
         >
           {expanded ? "Show less" : "Show more"}
         </button>
