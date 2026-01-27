@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from typing import Optional, Union
 
 class GenerateSQLRequest(BaseModel):
-  user_id:str
   query:str
 
 

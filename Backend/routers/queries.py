@@ -16,7 +16,7 @@ def generate_sql_query(
 
     return format_generate_sql_response(
       llm_response=llm_response,
-      user_id=request.user_id
+      user_id="123"
     )
   except Exception as e:
     # Log e in real apps

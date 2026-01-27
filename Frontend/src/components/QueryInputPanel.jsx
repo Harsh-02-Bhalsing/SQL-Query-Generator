@@ -4,7 +4,8 @@ import GeneratedQueryCard from "./GeneratedQueryCard";
 import ErrorResponseCard from "./ErrorResponseCard";
 
 const QueryInputPanel = () => {
-  const { userId } = useAuth();
+
+  const { currentUser } = useAuth();
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -21,33 +22,37 @@ const QueryInputPanel = () => {
   }, [messages]);
 
   /* ---------------- Mock API ---------------- */
-  const sendQueryToBackend = async ({ userId, query }) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (query.toLowerCase().includes("marks")) {
-          resolve({
-            status: 0,
-            userId,
-            data: {
-              error: "Column 'marks' does not exist.",
-              suggestion: "Try using available columns like score or grade.",
-              resId: "res_002",
-            },
-          });
-        } else {
-          resolve({
-            status: 1,
-            userId,
-            data: {
-              query: "SELECT * FROM students;",
-              details: "Fetches all records from students table",
-              language: "DQL",
-              resId: "res_001",
-            },
-          });
-        }
-      }, 1200);
+  const sendQueryToBackend = async ({ query }) => {
+    if (!currentUser) {
+      throw new Error("User not authenticated");
+    }
+
+    // 🔑 Get Firebase ID token
+    const token = await currentUser.getIdToken();
+
+
+    const response = await fetch("http://localhost:8000/api/queries/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`, // ✅ IMPORTANT
+      },
+      body: JSON.stringify({
+        query, // ✅ ONLY query
+      }),
     });
+
+
+    const data = await response.json();
+
+
+    if (!response.ok) {
+      throw new Error(data.detail || "Failed to generate SQL");
+    }
+
+
+    return data;
+    
   };
 
   /* ---------------- Submit Handler ---------------- */
@@ -71,7 +76,6 @@ const QueryInputPanel = () => {
 
     try {
       const response = await sendQueryToBackend({
-        userId,
         query: userMessage,
       });
 
@@ -83,8 +87,8 @@ const QueryInputPanel = () => {
             response,
           })
       );
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch(err) {
+      setError(err.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

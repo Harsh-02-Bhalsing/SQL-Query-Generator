@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [userEmail, setUserEmail] = useState(null);
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true); // important for protected routes
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -17,11 +18,13 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         setUserEmail(user.email);
         setUserId(user.uid);
+        setCurrentUser(user);
       } else {
         // User is logged out
         setIsAuthenticated(false);
         setUserEmail(null);
         setUserId(null);
+        setCurrentUser(null)
       }
       setLoading(false);
     });
@@ -43,6 +46,7 @@ export const AuthProvider = ({ children }) => {
         userId,
         logout,
         loading,
+        currentUser,
       }}
     >
       {children}
