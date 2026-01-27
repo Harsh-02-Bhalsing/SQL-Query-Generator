@@ -16,7 +16,7 @@ const ErrorResponseCard = ({ data }) => {
       {/* Show / Hide suggestion – fixed bottom-right */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="absolute bottom-1.5 right-0.5 text-[0.700rem] text-gray-400 hover:text-gray-200"
+        className="absolute bottom-1.5 right-2 text-[0.700rem] text-gray-400 hover:text-gray-200"
       >
         {expanded ? "Hide suggestion" : "Show suggestion"}
       </button>

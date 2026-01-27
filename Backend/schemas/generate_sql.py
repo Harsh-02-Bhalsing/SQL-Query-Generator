@@ -3,6 +3,7 @@ from typing import Optional, Union
 
 class GenerateSQLRequest(BaseModel):
   query:str
+  user_id:str
 
 
 

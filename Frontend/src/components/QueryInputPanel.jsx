@@ -5,7 +5,7 @@ import ErrorResponseCard from "./ErrorResponseCard";
 
 const QueryInputPanel = () => {
 
-  const { currentUser } = useAuth();
+  const { userId } = useAuth();
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -22,23 +22,17 @@ const QueryInputPanel = () => {
   }, [messages]);
 
   /* ---------------- Mock API ---------------- */
-  const sendQueryToBackend = async ({ query }) => {
-    if (!currentUser) {
-      throw new Error("User not authenticated");
-    }
-
-    // 🔑 Get Firebase ID token
-    const token = await currentUser.getIdToken();
-
+  const sendQueryToBackend = async ({ user_id,query }) => {
+    
 
     const response = await fetch("http://localhost:8000/api/queries/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`, // ✅ IMPORTANT
       },
       body: JSON.stringify({
-        query, // ✅ ONLY query
+        query:query,
+        user_id:userId // ✅ ONLY query
       }),
     });
 
@@ -77,6 +71,7 @@ const QueryInputPanel = () => {
     try {
       const response = await sendQueryToBackend({
         query: userMessage,
+        userId:userId
       });
 
       setMessages((prev) =>
