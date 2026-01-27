@@ -1,0 +1,387 @@
+{
+    "database": "D:\\Progression School Internship Project\\PSI_1_018_harshad_sql-query-generator-from-natural-language\\Backend\\db\\user_db\\chinook.db",
+    "dialect": "sqlite",
+    "tables": {
+        "albums": {
+            "columns": {
+                "AlbumId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "Title": {
+                    "type": "NVARCHAR(160)",
+                    "nullable": false
+                },
+                "ArtistId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "foreign_key": "artists.ArtistId"
+                }
+            }
+        },
+        "artists": {
+            "columns": {
+                "ArtistId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "Name": {
+                    "type": "NVARCHAR(120)",
+                    "nullable": true
+                }
+            }
+        },
+        "customers": {
+            "columns": {
+                "CustomerId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "FirstName": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": false
+                },
+                "LastName": {
+                    "type": "NVARCHAR(20)",
+                    "nullable": false
+                },
+                "Company": {
+                    "type": "NVARCHAR(80)",
+                    "nullable": true
+                },
+                "Address": {
+                    "type": "NVARCHAR(70)",
+                    "nullable": true
+                },
+                "City": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "State": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "Country": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "PostalCode": {
+                    "type": "NVARCHAR(10)",
+                    "nullable": true
+                },
+                "Phone": {
+                    "type": "NVARCHAR(24)",
+                    "nullable": true
+                },
+                "Fax": {
+                    "type": "NVARCHAR(24)",
+                    "nullable": true
+                },
+                "Email": {
+                    "type": "NVARCHAR(60)",
+                    "nullable": false
+                },
+                "SupportRepId": {
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "foreign_key": "employees.EmployeeId"
+                }
+            }
+        },
+        "employees": {
+            "columns": {
+                "EmployeeId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "LastName": {
+                    "type": "NVARCHAR(20)",
+                    "nullable": false
+                },
+                "FirstName": {
+                    "type": "NVARCHAR(20)",
+                    "nullable": false
+                },
+                "Title": {
+                    "type": "NVARCHAR(30)",
+                    "nullable": true
+                },
+                "ReportsTo": {
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "foreign_key": "employees.EmployeeId"
+                },
+                "BirthDate": {
+                    "type": "DATETIME",
+                    "nullable": true
+                },
+                "HireDate": {
+                    "type": "DATETIME",
+                    "nullable": true
+                },
+                "Address": {
+                    "type": "NVARCHAR(70)",
+                    "nullable": true
+                },
+                "City": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "State": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "Country": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "PostalCode": {
+                    "type": "NVARCHAR(10)",
+                    "nullable": true
+                },
+                "Phone": {
+                    "type": "NVARCHAR(24)",
+                    "nullable": true
+                },
+                "Fax": {
+                    "type": "NVARCHAR(24)",
+                    "nullable": true
+                },
+                "Email": {
+                    "type": "NVARCHAR(60)",
+                    "nullable": true
+                }
+            }
+        },
+        "genres": {
+            "columns": {
+                "GenreId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "Name": {
+                    "type": "NVARCHAR(120)",
+                    "nullable": true
+                }
+            }
+        },
+        "invoice_items": {
+            "columns": {
+                "InvoiceLineId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "InvoiceId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "foreign_key": "invoices.InvoiceId"
+                },
+                "TrackId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "foreign_key": "tracks.TrackId"
+                },
+                "UnitPrice": {
+                    "type": "NUMERIC(10, 2)",
+                    "nullable": false
+                },
+                "Quantity": {
+                    "type": "INTEGER",
+                    "nullable": false
+                }
+            }
+        },
+        "invoices": {
+            "columns": {
+                "InvoiceId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "CustomerId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "foreign_key": "customers.CustomerId"
+                },
+                "InvoiceDate": {
+                    "type": "DATETIME",
+                    "nullable": false
+                },
+                "BillingAddress": {
+                    "type": "NVARCHAR(70)",
+                    "nullable": true
+                },
+                "BillingCity": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "BillingState": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "BillingCountry": {
+                    "type": "NVARCHAR(40)",
+                    "nullable": true
+                },
+                "BillingPostalCode": {
+                    "type": "NVARCHAR(10)",
+                    "nullable": true
+                },
+                "Total": {
+                    "type": "NUMERIC(10, 2)",
+                    "nullable": false
+                }
+            }
+        },
+        "media_types": {
+            "columns": {
+                "MediaTypeId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "Name": {
+                    "type": "NVARCHAR(120)",
+                    "nullable": true
+                }
+            }
+        },
+        "playlist_track": {
+            "columns": {
+                "PlaylistId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true,
+                    "foreign_key": "playlists.PlaylistId"
+                },
+                "TrackId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true,
+                    "foreign_key": "tracks.TrackId"
+                }
+            }
+        },
+        "playlists": {
+            "columns": {
+                "PlaylistId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "Name": {
+                    "type": "NVARCHAR(120)",
+                    "nullable": true
+                }
+            }
+        },
+        "tracks": {
+            "columns": {
+                "TrackId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "primary_key": true
+                },
+                "Name": {
+                    "type": "NVARCHAR(200)",
+                    "nullable": false
+                },
+                "AlbumId": {
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "foreign_key": "albums.AlbumId"
+                },
+                "MediaTypeId": {
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "foreign_key": "media_types.MediaTypeId"
+                },
+                "GenreId": {
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "foreign_key": "genres.GenreId"
+                },
+                "Composer": {
+                    "type": "NVARCHAR(220)",
+                    "nullable": true
+                },
+                "Milliseconds": {
+                    "type": "INTEGER",
+                    "nullable": false
+                },
+                "Bytes": {
+                    "type": "INTEGER",
+                    "nullable": true
+                },
+                "UnitPrice": {
+                    "type": "NUMERIC(10, 2)",
+                    "nullable": false
+                }
+            }
+        }
+    },
+    "relationships": [
+        {
+            "from": "albums.ArtistId",
+            "to": "artists.ArtistId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "customers.SupportRepId",
+            "to": "employees.EmployeeId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "employees.ReportsTo",
+            "to": "employees.EmployeeId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "invoice_items.TrackId",
+            "to": "tracks.TrackId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "invoice_items.InvoiceId",
+            "to": "invoices.InvoiceId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "invoices.CustomerId",
+            "to": "customers.CustomerId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "playlist_track.TrackId",
+            "to": "tracks.TrackId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "playlist_track.PlaylistId",
+            "to": "playlists.PlaylistId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "tracks.MediaTypeId",
+            "to": "media_types.MediaTypeId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "tracks.GenreId",
+            "to": "genres.GenreId",
+            "type": "many-to-one"
+        },
+        {
+            "from": "tracks.AlbumId",
+            "to": "albums.AlbumId",
+            "type": "many-to-one"
+        }
+    ],
+    "last_updated": "2026-01-26T15:09:35.749101"
+}
