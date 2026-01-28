@@ -13,5 +13,5 @@ if not GEMINI_API_KEY:
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash-lite",
     temperature=0,
-    api_key=GEMINI_API_KEY
+    api_key="AIzaSyCPj2bUa3xZsggyrrXCZJfl3MiZDFuN8ls"
 )
