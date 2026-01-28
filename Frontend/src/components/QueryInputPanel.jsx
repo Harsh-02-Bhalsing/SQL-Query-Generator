@@ -90,7 +90,7 @@ const QueryInputPanel = ({ onExecute }) => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#1c1c1c] rounded-lg border border-[#2a2a2a]">
+    <div className="h-full flex flex-col bg-[#1c1c1c] rounded-lg border border-[#2a2a2a] ">
       {/* Chat Area */}
       
       <div
@@ -131,7 +131,7 @@ const QueryInputPanel = ({ onExecute }) => {
       
 
       {/* Input Area */}
-      <div className=" p-1 flex items-center gap-3">
+      <div className=" p-1 pl-3 pb-3 flex items-center gap-3">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}

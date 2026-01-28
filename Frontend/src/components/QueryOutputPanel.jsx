@@ -11,13 +11,14 @@ const QueryOutputPanel = ({ executions }) => {
     const last = executions[executions.length - 1];
     executeQuery(last.query, last.explanation, 1);
   }, [executions]);
-
   useEffect(() => {
-    if (executions.length === 0) return;
-
-    const last = executions[executions.length - 1];
-    executeQuery(last.query, last.explanation, 1);
-  }, [executions]);
+    if (!bottomRef.current) return;
+    
+    bottomRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [results]);
 
   const executeQuery = async (query, explanation, page) => {
     const res = await fetch("http://localhost:8000/api/queries/execute", {
