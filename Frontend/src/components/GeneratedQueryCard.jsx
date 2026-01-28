@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const GeneratedQueryCard = ({ data }) => {
+const GeneratedQueryCard = ({ data,onExecute }) => {
   const [expanded, setExpanded] = useState(false);
 
   const copyQuery = () => {
@@ -47,7 +47,15 @@ const GeneratedQueryCard = ({ data }) => {
 
       {/* Action Buttons (outside card) */}
       <div className="flex justify-end gap-2">
-        <button className="px-3 py-1.5 text-xs rounded-md bg-[#2d2d2d] hover:bg-[#3a3a3a] transition">
+        <button 
+          onClick={() =>
+            onExecute({
+              query: data.query,
+              explanation: data.details,
+            })
+          }
+          className="px-3 py-1.5 text-xs rounded-md bg-[#2d2d2d] hover:bg-[#3a3a3a] transition"
+        >
           Execute
         </button>
         <button className="px-3 py-1.5 text-xs rounded-md bg-[#2d2d2d] hover:bg-[#3a3a3a] transition">
