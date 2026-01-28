@@ -63,7 +63,7 @@ const QueryInputPanel = ({ onExecute }) => {
     setMessages((prev) => [
       ...prev,
       { type: "user", text: userMessage },
-      { type: "loading" },
+      { type: "loading"},
     ]);
 
     setLoading(true);
@@ -73,7 +73,7 @@ const QueryInputPanel = ({ onExecute }) => {
         query: userMessage,
         userId:userId
       });
-
+      
       setMessages((prev) =>
         prev
           .filter((msg) => msg.type !== "loading")
@@ -131,7 +131,7 @@ const QueryInputPanel = ({ onExecute }) => {
       
 
       {/* Input Area */}
-      <div className=" p-1 pl-3 pb-3 flex items-center gap-3">
+      <div className=" p-1 pl-3 pb-2 flex items-center gap-3">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}

@@ -6,6 +6,11 @@ from db.user_db.user_database import get_db
 from schemas.execute_sql import QueryRequest
 from sqlalchemy.orm import Session
 from services.query_executer import execute_query
+from schemas.saved_queries import SaveQueryRequest
+from db.app_db.application_database import get_db as get_app_db
+from models.saved_queries import DbSavedQuery
+from sqlalchemy.orm import Session
+
 router=APIRouter(
   prefix="/api/queries",
   tags=["queries"]
@@ -20,7 +25,8 @@ def generate_sql_query(
 
     return format_generate_sql_response(
       llm_response=llm_response,
-      user_id=request.user_id
+      user_id=request.user_id,
+      natural_language_query=request.query
     )
   except Exception as e:
     # Log e in real apps
@@ -60,3 +66,57 @@ def run_query(
       status_code=500,
       detail=str(e),
     )
+  
+
+from fastapi import HTTPException, Depends
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
+
+@router.post("/save")
+def save_query(
+    request: SaveQueryRequest,
+    db: Session = Depends(get_app_db),
+):
+    # Check if query already saved for this user
+    existing_query = (
+        db.query(DbSavedQuery)
+        .filter(
+            DbSavedQuery.query_id == request.query_id,
+            DbSavedQuery.user_id == request.user_id,
+        )
+        .first()
+    )
+
+    if existing_query:
+        raise HTTPException(
+            status_code=400,
+            detail="Query already saved for this user",
+        )
+
+    try:
+        new_saved_query = DbSavedQuery(
+            query_id=request.query_id,
+            user_id=request.user_id,
+            natural_language_query=request.natural_language_query,
+            sql_query=request.sql_query,
+            title=request.title,
+        )
+
+        db.add(new_saved_query)
+        db.commit()
+        db.refresh(new_saved_query)
+
+        return {
+            "query_id": new_saved_query.query_id,
+            "user_id": new_saved_query.user_id,
+            "title": new_saved_query.title,
+            "created_at": new_saved_query.created_at,
+            "message": "Query saved successfully",
+        }
+
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to save query",
+        )

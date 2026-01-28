@@ -11,11 +11,13 @@ class SuccessData(BaseModel):
     query: str
     details: str
     language: str
+    natural_language_query: str
     res_id: str
 
 class ErrorData(BaseModel):
     error: str
     suggestion: str
+    natural_language_query: str
     res_id: str
 
 class GenerateSQLResponse(BaseModel):

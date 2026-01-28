@@ -93,7 +93,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Input Section */}
-        <div style={{ height: `${topHeight}%` }} className="p-2">
+        <div style={{ height: `${topHeight}%` }} >
           <QueryInputPanel onExecute={handleExecuteQuery} />
         </div>
 
