@@ -4,10 +4,15 @@ import QueryInputPanel from "../components/QueryInputPanel";
 import QueryOutputPanel from "../components/QueryOutputPanel";
 
 const Dashboard = () => {
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [sidebarWidth, setSidebarWidth] = useState(30); // %
+  const [sidebarWidth, setSidebarWidth] = useState(25); // %
   const [topHeight, setTopHeight] = useState(40); // %
+  const [executions, setExecutions] = useState([]);
 
+  const handleExecuteQuery = (payload) => {
+    setExecutions((prev) => [...prev, payload]);
+  };
   /* ---------- Vertical resize (input/output) ---------- */
   const startVerticalResize = (e) => {
     e.preventDefault();
@@ -89,7 +94,7 @@ const Dashboard = () => {
       <div className="flex-1 flex flex-col">
         {/* Input Section */}
         <div style={{ height: `${topHeight}%` }} className="p-2">
-          <QueryInputPanel />
+          <QueryInputPanel onExecute={handleExecuteQuery} />
         </div>
 
         {/* Minimal divider */}
@@ -99,8 +104,8 @@ const Dashboard = () => {
         />
 
         {/* Output Section */}
-        <div className="flex-1 p-0">
-          <QueryOutputPanel />
+        <div className="flex-1 p-0 min-h-0 overflow-hidden">
+          <QueryOutputPanel executions={executions} />
         </div>
       </div>
     </div>

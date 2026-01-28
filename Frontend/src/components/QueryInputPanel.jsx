@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import GeneratedQueryCard from "./GeneratedQueryCard";
 import ErrorResponseCard from "./ErrorResponseCard";
 
-const QueryInputPanel = () => {
+const QueryInputPanel = ({ onExecute }) => {
 
   const { userId } = useAuth();
 
@@ -90,7 +90,7 @@ const QueryInputPanel = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#1c1c1c] rounded-lg border border-[#2a2a2a]">
+    <div className="h-full flex flex-col bg-[#1c1c1c] rounded-lg border border-[#2a2a2a] ">
       {/* Chat Area */}
       
       <div
@@ -119,7 +119,7 @@ const QueryInputPanel = () => {
 
           if (msg.type === "bot") {
             return msg.response.status === 1 ? (
-              <GeneratedQueryCard key={idx} data={msg.response.data} />
+              <GeneratedQueryCard key={idx} data={msg.response.data} onExecute={onExecute} />
             ) : (
               <ErrorResponseCard key={idx} data={msg.response.data} />
             );
@@ -131,7 +131,7 @@ const QueryInputPanel = () => {
       
 
       {/* Input Area */}
-      <div className="border-t border-[#2a2a2a] p-3 flex items-center gap-3">
+      <div className=" p-1 pl-3 pb-3 flex items-center gap-3">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
