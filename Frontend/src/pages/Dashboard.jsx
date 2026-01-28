@@ -104,7 +104,7 @@ const Dashboard = () => {
         />
 
         {/* Output Section */}
-        <div className="flex-1 p-0">
+        <div className="flex-1 p-0 min-h-0 overflow-hidden">
           <QueryOutputPanel executions={executions} />
         </div>
       </div>

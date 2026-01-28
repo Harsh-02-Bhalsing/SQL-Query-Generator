@@ -1,9 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const PAGE_SIZE = 20;
 
 const QueryOutputPanel = ({ executions }) => {
   const [results, setResults] = useState([]);
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    if (executions.length === 0) return;
+    const last = executions[executions.length - 1];
+    executeQuery(last.query, last.explanation, 1);
+  }, [executions]);
 
   useEffect(() => {
     if (executions.length === 0) return;
@@ -60,7 +67,7 @@ const QueryOutputPanel = ({ executions }) => {
   };
 
   return (
-    <div className="h-full rounded-md bg-black border border-[#333] p-4 font-mono text-xs overflow-y-auto">
+    <div className="h-full min-h-0 w-full rounded-md bg-black border border-[#333] p-4 font-mono text-xs overflow-auto">
       {results.map((res, idx) => {
         const { pageData } = res;
         const columns =
@@ -137,6 +144,7 @@ const QueryOutputPanel = ({ executions }) => {
           </div>
         );
       })}
+      <div ref={bottomRef} />
     </div>
   );
 };
