@@ -18,7 +18,7 @@ router=APIRouter(
 )
 \
 
-@router.post("/api/queries", response_model=GetSavedQueriesResponse)
+@router.post("/", response_model=GetSavedQueriesResponse)
 def get_saved_queries(
     request: GetSavedQueriesRequest,
     db: Session = Depends(get_app_db),

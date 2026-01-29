@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import GeneratedQueryCard from "./GeneratedQueryCard";
 import ErrorResponseCard from "./ErrorResponseCard";
 
-const QueryInputPanel = ({ onExecute }) => {
+const QueryInputPanel = ({ onExecute,onSaved }) => {
 
   const { userId } = useAuth();
 
@@ -89,6 +89,7 @@ const QueryInputPanel = ({ onExecute }) => {
     }
   };
 
+
   return (
     <div className="h-full flex flex-col bg-[#1c1c1c] rounded-lg border border-[#2a2a2a] ">
       {/* Chat Area */}
@@ -119,7 +120,7 @@ const QueryInputPanel = ({ onExecute }) => {
 
           if (msg.type === "bot") {
             return msg.response.status === 1 ? (
-              <GeneratedQueryCard key={idx} data={msg.response.data} onExecute={onExecute} />
+              <GeneratedQueryCard key={idx} data={msg.response.data} onExecute={onExecute} onSaved={onSaved}/>
             ) : (
               <ErrorResponseCard key={idx} data={msg.response.data} />
             );

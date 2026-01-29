@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [sidebarWidth, setSidebarWidth] = useState(25); // %
   const [topHeight, setTopHeight] = useState(40); // %
   const [executions, setExecutions] = useState([]);
+  const [refreshSavedQueries, setRefreshSavedQueries] = useState(0);
 
   const handleExecuteQuery = (payload) => {
     setExecutions((prev) => [...prev, payload]);
@@ -63,7 +64,10 @@ const Dashboard = () => {
           style={{ width: `${sidebarWidth}%` }}
           className="bg-[#252526] border-r border-[#333] relative flex"
         >
-          <SavedQueries />
+          <SavedQueries
+            onExecute={handleExecuteQuery}
+            refreshKey={refreshSavedQueries}
+          />
 
           {/* Collapse button */}
           <button
@@ -94,7 +98,10 @@ const Dashboard = () => {
       <div className="flex-1 flex flex-col">
         {/* Input Section */}
         <div style={{ height: `${topHeight}%` }} >
-          <QueryInputPanel onExecute={handleExecuteQuery} />
+          <QueryInputPanel
+            onExecute={handleExecuteQuery}
+            onSaved={() => setRefreshSavedQueries((v) => v + 1)}
+          />
         </div>
 
         {/* Minimal divider */}

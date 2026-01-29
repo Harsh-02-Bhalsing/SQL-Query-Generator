@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-const GeneratedQueryCard = ({ data, onExecute }) => {
+const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
   const { userId } = useAuth();
 
   const [expanded, setExpanded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("idle"); // idle | saved
   const [showTitleModal, setShowTitleModal] = useState(false);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("");  
 
   const copyQuery = () => {
     navigator.clipboard.writeText(data.query);
@@ -48,6 +48,8 @@ const GeneratedQueryCard = ({ data, onExecute }) => {
     try {
       await saveQuery(title);
       setSaveStatus("saved");
+
+      onSaved?.(); 
 
       // Reset state after 5 seconds
       setTimeout(() => {
