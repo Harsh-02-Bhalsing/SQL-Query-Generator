@@ -11,7 +11,7 @@ from db.app_db.application_database import get_db as get_app_db
 from models.saved_queries import DbSavedQuery
 from sqlalchemy.orm import Session
 from schemas.saved_queries import GetSavedQueriesRequest,GetSavedQueriesResponse,SavedQueryItem
-
+from schemas.saved_queries import DeleteSavedQueryRequest
 router=APIRouter(
   prefix="/api/queries",
   tags=["queries"]
@@ -159,4 +159,36 @@ def save_query(
         raise HTTPException(
             status_code=500,
             detail="Failed to save query",
+        )
+    
+@router.delete("/{query_id}")
+def delete_saved_query(
+    query_id: str,
+    request: DeleteSavedQueryRequest,
+    db: Session = Depends(get_app_db),
+):
+    saved_query = (
+        db.query(DbSavedQuery)
+        .filter(
+            DbSavedQuery.query_id == query_id,
+            DbSavedQuery.user_id == request.user_id,
+        )
+        .first()
+    )
+
+    if not saved_query:
+        raise HTTPException(
+            status_code=404,
+            detail="Saved query not found or unauthorized",
+        )
+
+    try:
+        db.delete(saved_query)
+        db.commit()
+        return {"message": "Query deleted successfully"}
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to delete saved query",
         )

@@ -69,3 +69,11 @@ class SavedQueryItem(BaseModel):
 class GetSavedQueriesResponse(BaseModel):
     total: int
     queries: List[SavedQueryItem]
+
+
+class DeleteSavedQueryRequest(BaseModel):
+    user_id: str = Field(
+        ...,
+        description="Firebase user ID whose saved queries should be fetched",
+        min_length=1,
+    )

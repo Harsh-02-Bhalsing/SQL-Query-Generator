@@ -44,18 +44,28 @@ const SavedQueries = ({ onExecute, refreshKey }) => {
 
   return (
     <div className="flex flex-col w-full h-full p-3 gap-3 overflow-y-auto">
-      <h2 className="text-xs uppercase tracking-wider text-gray-400">
-        Saved Queries
+      <h2 className="flex items-center gap-2 text-[.850rem] uppercase tracking-wider font-semibold">
+        <span className="text-gray-400">📂</span>
+        <span className="bg-gradient-to-r from-gray-200 to-gray-500 bg-clip-text text-transparent">
+          Saved Queries
+        </span>
       </h2>
 
       {loading && (
-        <p className="text-xs text-gray-500">Loading saved queries…</p>
+        <div className="flex items-center gap-2 text-xs text-gray-400 animate-pulse">
+          <span>⏳</span>
+          <span>Loading saved queries…</span>
+        </div>
       )}
 
       {!loading && queries.length === 0 && (
-        <p className="text-xs text-gray-500">
-          No saved queries yet. Save one to see it here.
-        </p>
+        <div className="flex flex-1 items-center justify-center text-center">
+          <div className="flex flex-col gap-1 text-xs text-gray-400">
+            <div className="text-gray-300 font-medium">
+              No saved queries yet
+            </div>
+          </div>
+        </div>
       )}
 
       {error && (
@@ -67,6 +77,9 @@ const SavedQueries = ({ onExecute, refreshKey }) => {
           key={query.query_id}
           query={query}
           onExecute={onExecute}
+          onDeleted={() => setQueries((q) =>
+            q.filter((item) => item.query_id !== query.query_id)
+          )}
         />
       ))}
     </div>
