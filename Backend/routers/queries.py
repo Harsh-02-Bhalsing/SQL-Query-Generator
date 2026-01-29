@@ -12,6 +12,8 @@ from models.saved_queries import DbSavedQuery
 from sqlalchemy.orm import Session
 from schemas.saved_queries import GetSavedQueriesRequest,GetSavedQueriesResponse,SavedQueryItem
 from schemas.saved_queries import DeleteSavedQueryRequest
+from schemas.query_detail import GetQueryDetailRequest,QueryDetailResponse
+
 router=APIRouter(
   prefix="/api/queries",
   tags=["queries"]
@@ -191,4 +193,43 @@ def delete_saved_query(
         raise HTTPException(
             status_code=500,
             detail="Failed to delete saved query",
+        )
+    
+
+@router.post("/{query_id}", response_model=QueryDetailResponse)
+def get_query_detail(
+    query_id: str,
+    request: GetQueryDetailRequest,
+    db: Session = Depends(get_app_db),
+):
+    try:
+        saved_query = (
+            db.query(DbSavedQuery)
+            .filter(
+                DbSavedQuery.query_id == query_id,
+                DbSavedQuery.user_id == request.user_id,
+            )
+            .first()
+        )
+
+        if not saved_query:
+            raise HTTPException(
+                status_code=404,
+                detail="Query not found or unauthorized",
+            )
+
+        return {
+            "query_id": saved_query.query_id,
+            "user_id": saved_query.user_id,
+            "title": saved_query.title,
+            "natural_language_query": saved_query.natural_language_query,
+            "sql_query": saved_query.sql_query,
+            "details": saved_query.details,
+            "created_at": saved_query.created_at,
+        }
+
+    except SQLAlchemyError:
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to fetch query details",
         )
