@@ -10,11 +10,49 @@ from schemas.saved_queries import SaveQueryRequest
 from db.app_db.application_database import get_db as get_app_db
 from models.saved_queries import DbSavedQuery
 from sqlalchemy.orm import Session
+from schemas.saved_queries import GetSavedQueriesRequest,GetSavedQueriesResponse,SavedQueryItem
 
 router=APIRouter(
   prefix="/api/queries",
   tags=["queries"]
 )
+\
+
+@router.post("/api/queries", response_model=GetSavedQueriesResponse)
+def get_saved_queries(
+    request: GetSavedQueriesRequest,
+    db: Session = Depends(get_app_db),
+):
+    try:
+        saved_queries = (
+            db.query(DbSavedQuery)
+            .filter(DbSavedQuery.user_id == request.user_id)
+            .order_by(DbSavedQuery.created_at.desc())
+            .all()
+        )
+
+        return {
+            "total": len(saved_queries),
+            "queries": [
+                {
+                    "query_id": q.query_id,
+                    "user_id": q.user_id,
+                    "title": q.title,
+                    "natural_language_query": q.natural_language_query,
+                    "sql_query": q.sql_query,
+                    "created_at": q.created_at,
+                }
+                for q in saved_queries
+            ],
+        }
+
+    except SQLAlchemyError:
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to fetch saved queries",
+        )
+
+
 
 @router.post("/generate",response_model=GenerateSQLResponse)
 def generate_sql_query(

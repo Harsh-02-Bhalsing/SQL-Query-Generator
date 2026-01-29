@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-
+from datetime import datetime
+from typing import List
 
 class SaveQueryRequest(BaseModel):
     query_id: str = Field(
@@ -37,3 +38,26 @@ class SaveQueryRequest(BaseModel):
         description="Type of database language",
         max_length=100,
     )
+
+
+
+
+class GetSavedQueriesRequest(BaseModel):
+    user_id: str = Field(
+        ...,
+        description="Firebase user ID whose saved queries should be fetched",
+        min_length=1,
+    )
+
+class SavedQueryItem(BaseModel):
+    query_id: str
+    user_id: str
+    title: Optional[str]
+    natural_language_query: str
+    sql_query: str
+    created_at: datetime
+
+
+class GetSavedQueriesResponse(BaseModel):
+    total: int
+    queries: List[SavedQueryItem]
