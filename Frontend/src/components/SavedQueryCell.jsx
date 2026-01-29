@@ -52,6 +52,11 @@ const SavedQueryCell = ({ query, onExecute }) => {
             {new Date(query.created_at).toLocaleString()}
           </p>
 
+          <p>
+            <span className="text-gray-500">Details:</span>{" "}
+            {query.details}
+          </p>
+
           <div className="flex gap-2 pt-2">
             <button
               className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a]"

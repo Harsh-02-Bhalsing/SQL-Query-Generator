@@ -21,5 +21,8 @@ class DbSavedQuery(Base):
     # Generated SQL query
     sql_query = Column(Text, nullable=False)
 
+    # explanation about query
+    details=Column(String, nullable=True)
+
     # Timestamp when query was saved
     created_at = Column(DateTime(timezone=True), server_default=func.now())

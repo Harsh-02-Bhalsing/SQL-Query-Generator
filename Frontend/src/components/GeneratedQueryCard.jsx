@@ -16,7 +16,7 @@ const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
 
   /* ---------- API Call ---------- */
   const saveQuery = async (titleValue) => {
-    
+    console.log(data.details)
     const response = await fetch("http://localhost:8000/api/queries/save", {
       method: "POST",
       headers: {
@@ -29,6 +29,7 @@ const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
         sql_query: data.query,
         title: titleValue,
         language: data.language,
+        details:data.details,
       }),
     });
 

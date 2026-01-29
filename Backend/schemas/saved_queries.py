@@ -39,6 +39,13 @@ class SaveQueryRequest(BaseModel):
         max_length=100,
     )
 
+    details:Optional[str]=Field(
+        None,
+        description="Explanation about the query",
+        max_length=500,
+    )
+
+
 
 
 
@@ -55,6 +62,7 @@ class SavedQueryItem(BaseModel):
     title: Optional[str]
     natural_language_query: str
     sql_query: str
+    details:str
     created_at: datetime
 
 

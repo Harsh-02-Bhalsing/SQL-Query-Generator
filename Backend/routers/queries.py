@@ -40,6 +40,7 @@ def get_saved_queries(
                     "title": q.title,
                     "natural_language_query": q.natural_language_query,
                     "sql_query": q.sql_query,
+                    "details":q.details,
                     "created_at": q.created_at,
                 }
                 for q in saved_queries
@@ -138,6 +139,7 @@ def save_query(
             natural_language_query=request.natural_language_query,
             sql_query=request.sql_query,
             title=request.title,
+            details=request.details,
         )
 
         db.add(new_saved_query)
