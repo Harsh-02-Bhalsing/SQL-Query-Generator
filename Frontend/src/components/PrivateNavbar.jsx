@@ -39,7 +39,7 @@ const PrivateNavbar = () => {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="px-4 py-2 text-sm rounded-md bg-[#2a2a2a] text-[#eaeaea] hover:bg-[#333] transition"
+            className="px-4 py-2 text-sm rounded-md bg-[#2a2a2a] text-[red] hover:bg-[#333] transition"
           >
             Logout
           </button>

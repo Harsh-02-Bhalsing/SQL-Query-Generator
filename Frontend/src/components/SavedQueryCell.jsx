@@ -94,14 +94,14 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
 
           <div className="flex gap-2 pt-2">
             <button
-              className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a]"
+              className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a] text-green-400"
             >
               View details
             </button>
 
             <button
               onClick={handleExecute}
-              className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a]"
+              className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a] text-yellow-400"
             >
               Execute
             </button>
