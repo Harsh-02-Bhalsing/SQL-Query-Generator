@@ -16,12 +16,17 @@ const PrivateNavbar = () => {
 
   return (
     <nav className="w-full bg-[#1a1a1a] border-b border-[#2a2a2a]">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
         {/* Logo / App Name */}
-        <Link to="/dashboard">
-          <h1 className="text-lg font-semibold text-[#eaeaea]">
+        <Link to="/dashboard" className="flex items-center gap-0">
+          <img
+            src="/AskSQL_logo.png"
+            alt="AskSQL logo"
+            className="h-12 w-12 object-contain"
+          />
+          <span className="text-[1.35rem] font-semibold text-[#eaeaea]">
             AskSQL
-          </h1>
+          </span>
         </Link>
 
         {/* Right Section */}
