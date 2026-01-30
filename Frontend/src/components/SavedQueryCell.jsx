@@ -5,7 +5,6 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
 
-  const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
   const copyQuery = () => {
     navigator.clipboard.writeText(query.sql_query);
@@ -56,9 +55,7 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
 
   return (
     <div
-      className={`border border-[#2f2f2f] rounded-md bg-[#232323] p-3 text-xs transition-all duration-300 ${
-        expanded ? "space-y-3" : ""
-      }`}
+      className="border border-[#2f2f2f] rounded-md bg-[#232323] p-3 text-xs transition-all duration-300 space-y-3"
     >
       {/* Header */}
       <div className="flex justify-between items-start">
@@ -79,28 +76,11 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
         </button>
       </div>
 
-      {/* Expanded content */}
-      {expanded && (
-        <div className="text-gray-400 space-y-2">
-          <p>
-            <span className="text-gray-500">Natural language:</span>{" "}
-            {query.natural_language_query}
-          </p>
-
-          <p>
-            <span className="text-gray-500">Created:</span>{" "}
-            {new Date(query.created_at).toLocaleString()}
-          </p>
-
-          <p>
-            <span className="text-gray-500">Details:</span>{" "}
-            {query.details}
-          </p>
-
+  
           <div className="flex gap-2 pt-2">
             <button
               onClick={handleViewDetails}
-              className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a] text-green-400"
+              className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a] text-yellow-400"
             >
               View details
             </button>
@@ -108,7 +88,7 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
 
             <button
               onClick={handleExecute}
-              className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a] text-yellow-400"
+              className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a] text-green-400"
             >
               Execute
             </button>
@@ -119,16 +99,7 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
               🗑 Delete
             </button>
           </div>
-        </div>
-      )}
-
-      {/* Expand toggle */}
-      <button
-        onClick={() => setExpanded((v) => !v)}
-        className="mt-2 text-[0.65rem] text-gray-400 hover:text-gray-200"
-      >
-        {expanded ? "Show less" : "Show more"}
-      </button>
+        
 
 
       {showConfirm && (
