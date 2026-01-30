@@ -52,6 +52,7 @@ const GeneratedQueryCard = ({ data,onExecute }) => {
             onExecute({
               query: data.query,
               explanation: data.details,
+              query_id:data.res_id,
             })
           }
           className="px-3 py-1.5 text-xs rounded-md bg-[#2d2d2d] hover:bg-[#3a3a3a] transition"

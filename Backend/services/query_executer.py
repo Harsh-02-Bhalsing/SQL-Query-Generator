@@ -1,7 +1,7 @@
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError, ProgrammingError, OperationalError
-
+from models.query_history import QueryExecutionHistory
 DEFAULT_PAGE_SIZE = 50
 MAX_PAGE_SIZE = 200
 
@@ -58,6 +58,18 @@ def execute_query(
 
         total_rows = db.execute(text(count_query)).scalar()
         total_pages = (total_rows + page_size - 1) // page_size
+
+        if page == 1:
+            history = QueryExecutionHistory(
+                user_id=user_id,
+                sql_query=query,
+                natural_language_query=natural_language_query,
+                total_rows=total_rows,
+                total_pages=total_pages,
+                description="Query executed successfully",
+            )
+            db.add(history)
+            db.commit()
 
         return {
             "page": page,
