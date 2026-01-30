@@ -29,13 +29,34 @@ const HistoryList = () => {
     fetchHistory();
   }, [userId]);
 
-  if (loading) return <p className="text-xs text-gray-400">Loading history…</p>;
-  if (error) return <p className="text-xs text-red-400">{error}</p>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center py-10">
+        <p className="text-xs text-gray-400">Loading query history…</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center py-10">
+        <p className="text-xs text-red-400">{error}</p>
+      </div>
+    );
+
   if (!history.length)
-    return <p className="text-xs text-gray-500">No query history yet.</p>;
+    return (
+      <div className="flex flex-col items-center justify-center py-16 space-y-2">
+        <p className="text-sm text-gray-400">
+          No query history yet
+        </p>
+        <p className="text-[0.7rem] text-gray-500">
+          Your executed queries will appear here
+        </p>
+      </div>
+    );
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {history.map((item) => (
         <HistoryItem key={item.id} item={item} />
       ))}

@@ -75,7 +75,7 @@ const QueryOutputPanel = ({ executions }) => {
   };
 
   return (
-    <div className="relative h-full min-h-0 w-full rounded-md bg-black border border-[#333] p-0 font-mono text-xs overflow-auto">
+    <div className="relative h-full min-h-0 w-full rounded-md bg-black border border-[#333] p-0 font-mono text-xs overflow-auto custom-scrollbar">
       
       {/* Output Heading */}
       <div className="

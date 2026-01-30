@@ -106,12 +106,12 @@ const QueryInputPanel = ({ onExecute,onSaved }) => {
 
 
   return (
-    <div className="h-full flex flex-col bg-[#1c1c1c] rounded-lg border border-[#2a2a2a] ">
+    <div className="h-full flex flex-col bg-[#1c1c1c] rounded-lg border border-[#2a2a2a] custom-scrollbar">
       {/* Chat Area */}
       
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-5"
+        className="flex-1 overflow-y-auto p-4 space-y-5 custom-scrollbar"
       >
         {messages.length === 0 && !loading && (
           <div className="flex items-center justify-center h-full">
