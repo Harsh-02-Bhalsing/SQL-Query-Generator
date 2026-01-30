@@ -68,84 +68,102 @@ const QueryOutputPanel = ({ executions }) => {
   };
 
   return (
-    <div className="h-full min-h-0 w-full rounded-md bg-black border border-[#333] p-4 font-mono text-xs overflow-auto">
-      {results.map((res, idx) => {
-        const { pageData } = res;
-        const columns =
-          pageData.data.length > 0
-            ? Object.keys(pageData.data[0])
-            : [];
+    <div className="relative h-full min-h-0 w-full rounded-md bg-black border border-[#333] p-0 font-mono text-xs overflow-auto">
+      
+      {/* Output Heading */}
+      <div className="
+        h-9
+        sticky top-0 z-10
+        bg-[#333333]
+        border-b border-[green]
+        px-3 py-2
+        text-[0.75rem] uppercase tracking-wider
+        text-green-300
+        font-bold
+      ">
+        Output
+      </div>
 
-        return (
-          <div key={idx} className="mb-8">
-            {/* Query */}
-            <div className="text-green-400 mb-1">
-              $ {res.query}
-            </div>
+      {/* Spacer so content doesn't overlap heading */}
+      <div className="p-4">
+        {results.map((res, idx) => {
+          const { pageData } = res;
+          const columns =
+            pageData.data.length > 0
+              ? Object.keys(pageData.data[0])
+              : [];
 
-            {/* Explanation */}
-            <div className="text-gray-400 mb-2">
-              {res.explanation}
-            </div>
+          return (
+            <div key={idx} className="mb-8">
+              {/* Query */}
+              <div className="text-green-400 mb-1">
+                $ {res.query}
+              </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
-              <table className="border border-[#333] text-green-300 w-full">
-                <thead>
-                  <tr>
-                    {columns.map((col) => (
-                      <th
-                        key={col}
-                        className="border border-[#333] px-2 py-1 text-left"
-                      >
-                        {col}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {pageData.data.map((row, rIdx) => (
-                    <tr key={rIdx}>
+              {/* Explanation */}
+              <div className="text-gray-400 mb-2">
+                {res.explanation}
+              </div>
+
+              {/* Table */}
+              <div className="overflow-x-auto">
+                <table className="border border-[#333] text-green-300 w-full">
+                  <thead>
+                    <tr>
                       {columns.map((col) => (
-                        <td
+                        <th
                           key={col}
-                          className="border border-[#333] px-2 py-1"
+                          className="border border-[#333] px-2 py-1 text-left"
                         >
-                          {String(row[col])}
-                        </td>
+                          {col}
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {pageData.data.map((row, rIdx) => (
+                      <tr key={rIdx}>
+                        {columns.map((col) => (
+                          <td
+                            key={col}
+                            className="border border-[#333] px-2 py-1"
+                          >
+                            {String(row[col])}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-            {/* Pagination */}
-            <div className="flex gap-3 mt-2 text-gray-400">
-              {pageData.page > 1 && (
-                <button
-                  onClick={() =>
-                    updatePage(idx, pageData.page - 1)
-                  }
-                >
-                  ← Prev
-                </button>
-              )}
+              {/* Pagination */}
+              <div className="flex gap-3 mt-2 text-gray-400">
+                {pageData.page > 1 && (
+                  <button
+                    onClick={() =>
+                      updatePage(idx, pageData.page - 1)
+                    }
+                  >
+                    ← Prev
+                  </button>
+                )}
 
-              {pageData.page < pageData.total_pages && (
-                <button
-                  onClick={() =>
-                    updatePage(idx, pageData.page + 1)
-                  }
-                >
-                  Next →
-                </button>
-              )}
+                {pageData.page < pageData.total_pages && (
+                  <button
+                    onClick={() =>
+                      updatePage(idx, pageData.page + 1)
+                    }
+                  >
+                    Next →
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        );
-      })}
-      <div ref={bottomRef} />
+          );
+        })}
+        <div ref={bottomRef} />
+      </div>
     </div>
   );
 };
