@@ -174,14 +174,28 @@ def get_query_history(
     payload: QueryHistoryRequest,
     db: Session = Depends(get_app_db),
 ):
-    history = (
-        db.query(QueryExecutionHistory)
-        .filter(QueryExecutionHistory.user_id == payload.user_id)
-        .order_by(QueryExecutionHistory.executed_at.desc())
-        .all()
-    )
+    try:
+        history = (
+            db.query(QueryExecutionHistory)
+            .filter(QueryExecutionHistory.user_id == payload.user_id)
+            .order_by(QueryExecutionHistory.executed_at.desc())
+            .all()
+        )
 
-    return {"history": history}
+        return {"history": history}
+    except SQLAlchemyError:
+        # Database-related errors
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to fetch query history",
+        )
+
+    except Exception:
+        # Truly unexpected errors
+        raise HTTPException(
+            status_code=500,
+            detail="Unexpected server error while fetching query history",
+        )
 
 @router.delete("/{query_id}")
 def delete_saved_query(

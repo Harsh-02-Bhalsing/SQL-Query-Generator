@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard"
 import PrivateLayout from "./layouts/PrivateLayout";
 import QueryDetailPage from "./pages/QueryDetail";
 import HistoryPage from "./pages/HistoryPage";
+import SchemaViewer from "./pages/SchemaViewer";
 function App() {
   return (
     <AuthProvider>
@@ -24,6 +25,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard/>}/>
             <Route path="/history" element={<HistoryPage/>} />
             <Route path="/queries/:id" element={<QueryDetailPage />} />
+            <Route path="/schema" element={<SchemaViewer/>} />
           </Route>
         </Route>
       </Routes>

@@ -47,6 +47,15 @@ const PrivateNavbar = () => {
               </Link>
             )}
 
+            {!isActive("/schema") && (
+              <Link
+                to="/schema"
+                className="text-xs text-gray-400 hover:text-gray-200 transition"
+              >
+                Schema
+              </Link>
+            )}
+
             {!isActive("/history") && (
               <Link
                 to="/history"

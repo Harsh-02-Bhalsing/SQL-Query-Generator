@@ -16,6 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import google.generativeai as genai
 from dotenv import load_dotenv
 from routers import queries as query_router
+from routers import database as database_router
 from db.app_db.application_database import Base
 from db.app_db.application_database import engine as app_db_engine
 
@@ -42,3 +43,4 @@ async def health_check():
 
 
 app.include_router(query_router.router)   
+app.include_router(database_router.router)

@@ -1,5 +1,5 @@
 from services.chains import sql_generation_chain
-from db.user_db.user_database import schema_text
+from db.user_db.user_db_schema import schema_text
 import json
 import uuid
 import re

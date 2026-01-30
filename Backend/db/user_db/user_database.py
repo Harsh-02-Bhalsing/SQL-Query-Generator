@@ -29,12 +29,3 @@ def get_db():
   finally:
     db.close()
 
-#database schema string
-
-SCHEMA_PATH = BASE_DIR/"user_db_schema.json"
-
-with open(SCHEMA_PATH, "r") as f:
-    schema_json = json.load(f)
-
-# Convert JSON → formatted string for LLM context
-schema_text = json.dumps(schema_json, indent=2)
