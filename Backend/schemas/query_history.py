@@ -10,8 +10,8 @@ class QueryHistoryRequest(BaseModel):
 class QueryHistoryResponse(BaseModel):
     id: int
     query_id:str
+    user_id:str
     sql_query: str
-    natural_language_query: Optional[str]
     description: Optional[str]
     total_rows: int
     total_pages: int

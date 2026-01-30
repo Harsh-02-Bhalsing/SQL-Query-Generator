@@ -6,11 +6,10 @@ class QueryExecutionHistory(Base):
     __tablename__ = "query_execution_history"
 
     id = Column(Integer, primary_key=True, index=True)
-    query_id=Column(String,index=True,nullabe=False)
+    query_id=Column(String,index=True,nullable=False)
     user_id = Column(String, index=True, nullable=False)
 
     sql_query = Column(Text, nullable=False)
-    natural_language_query = Column(Text, nullable=True)
     description = Column(Text, nullable=True)
 
     total_rows = Column(Integer, nullable=False)

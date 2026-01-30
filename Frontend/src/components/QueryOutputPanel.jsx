@@ -1,15 +1,16 @@
 import { useEffect, useState, useRef } from "react";
-
+import { useAuth } from "../context/AuthContext";
 const PAGE_SIZE = 20;
 
 const QueryOutputPanel = ({ executions }) => {
   const [results, setResults] = useState([]);
   const bottomRef = useRef(null);
+  const { userId } = useAuth();
 
   useEffect(() => {
     if (executions.length === 0) return;
     const last = executions[executions.length - 1];
-    executeQuery(last.query, last.explanation, 1);
+    executeQuery(userId,last.query_id,last.query, last.explanation, 1);
   }, [executions]);
   useEffect(() => {
     if (!bottomRef.current) return;
@@ -20,11 +21,14 @@ const QueryOutputPanel = ({ executions }) => {
     });
   }, [results]);
 
-  const executeQuery = async (query, explanation, page) => {
+  const executeQuery = async (userId,query_id,query, explanation, page) => {
+    console.log(userId,"and",query_id)
     const res = await fetch("http://localhost:8000/api/queries/execute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        user_id:userId,
+        query_id:query_id,
         query,
         page,
         page_size: PAGE_SIZE,
@@ -36,6 +40,7 @@ const QueryOutputPanel = ({ executions }) => {
     setResults((prev) => [
       ...prev,
       {
+        query_id:query_id,
         query,
         explanation,
         pageData: data,
@@ -45,11 +50,13 @@ const QueryOutputPanel = ({ executions }) => {
 
   const updatePage = async (index, nextPage) => {
     const item = results[index];
-
+    console.log(userId,item.query_id)
     const res = await fetch("http://localhost:8000/api/queries/execute", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        user_id:userId,
+        query_id:item.query_id,
         query: item.query,
         page: nextPage,
         page_size: PAGE_SIZE,

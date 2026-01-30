@@ -13,6 +13,8 @@ from sqlalchemy.orm import Session
 from schemas.saved_queries import GetSavedQueriesRequest,GetSavedQueriesResponse,SavedQueryItem
 from schemas.saved_queries import DeleteSavedQueryRequest
 from schemas.query_detail import GetQueryDetailRequest,QueryDetailResponse
+from schemas.query_history import QueryHistoryRequest,QueryHistoryResponse,QueryHistoryListResponse
+from models.query_history import QueryExecutionHistory
 
 router=APIRouter(
   prefix="/api/queries",
@@ -81,6 +83,7 @@ def generate_sql_query(
 def run_query(
   payload: QueryRequest,
   db: Session = Depends(get_db),
+  app_db:Session=Depends(get_app_db),
 ):
   query = payload.query.strip()
 
@@ -96,6 +99,9 @@ def run_query(
   try:
     return execute_query(
       db=db,
+      app_db=app_db,
+      user_id=payload.user_id,
+      query_id=payload.query_id,
       user_query=query,
       page=payload.page,
       page_size=payload.page_size,
@@ -163,6 +169,20 @@ def save_query(
             detail="Failed to save query",
         )
     
+@router.post("/history", response_model=QueryHistoryListResponse)
+def get_query_history(
+    payload: QueryHistoryRequest,
+    db: Session = Depends(get_app_db),
+):
+    history = (
+        db.query(QueryExecutionHistory)
+        .filter(QueryExecutionHistory.user_id == payload.user_id)
+        .order_by(QueryExecutionHistory.executed_at.desc())
+        .all()
+    )
+
+    return {"history": history}
+
 @router.delete("/{query_id}")
 def delete_saved_query(
     query_id: str,
@@ -233,3 +253,5 @@ def get_query_detail(
             status_code=500,
             detail="Failed to fetch query details",
         )
+    
+

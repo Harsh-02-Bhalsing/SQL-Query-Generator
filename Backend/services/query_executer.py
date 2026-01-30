@@ -17,6 +17,9 @@ MAX_PAGE_SIZE = 200
 
 def execute_query(
     db: Session,
+    app_db:Session,
+    user_id:str,
+    query_id:str,
     user_query: str,
     page: int,
     page_size: int,
@@ -61,15 +64,15 @@ def execute_query(
 
         if page == 1:
             history = QueryExecutionHistory(
+                query_id=query_id,
                 user_id=user_id,
                 sql_query=query,
-                natural_language_query=natural_language_query,
                 total_rows=total_rows,
                 total_pages=total_pages,
                 description="Query executed successfully",
             )
-            db.add(history)
-            db.commit()
+            app_db.add(history)
+            app_db.commit()
 
         return {
             "page": page,

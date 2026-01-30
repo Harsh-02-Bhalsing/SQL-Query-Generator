@@ -19,6 +19,7 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
     onExecute({
       query: query.sql_query,
       explanation: query.natural_language_query,
+      query_id:query.query_id,
     });
   };
 

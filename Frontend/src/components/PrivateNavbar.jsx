@@ -32,6 +32,12 @@ const PrivateNavbar = () => {
         {/* Right Section */}
         <div className="flex items-center gap-6">
           {/* User Email */}
+          <Link to="/dashboard">
+              Dashboard
+          </Link>
+          <Link to="/history">
+              History
+          </Link>
           <span className="text-sm text-[#9ca3af]">
             {userEmail}
           </span>

@@ -49,6 +49,7 @@ const QueryDetailPage = () => {
       {
         query: query.sql_query,
         explanation: query.details,
+        query_id:query.query_id,
       },
     ]);
   };
