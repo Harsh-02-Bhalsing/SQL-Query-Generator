@@ -1,15 +1,20 @@
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
 
   const [expanded, setExpanded] = useState(false);
-
+  const navigate = useNavigate();
   const copyQuery = () => {
     navigator.clipboard.writeText(query.sql_query);
   };
+
+  const handleViewDetails = () => {
+    navigate(`/queries/${query.query_id}`);
+  };
+
 
   const handleExecute = () => {
     onExecute({
@@ -94,10 +99,12 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
 
           <div className="flex gap-2 pt-2">
             <button
+              onClick={handleViewDetails}
               className="px-2 py-1 rounded bg-[#2d2d2d] hover:bg-[#3a3a3a] text-green-400"
             >
               View details
             </button>
+
 
             <button
               onClick={handleExecute}

@@ -68,15 +68,24 @@ const QueryOutputPanel = ({ executions }) => {
   };
 
   return (
-    <div className="relative h-full min-h-0 w-full rounded-md bg-black border border-[#333] p-4 font-mono text-xs overflow-auto">
+    <div className="relative h-full min-h-0 w-full rounded-md bg-black border border-[#333] p-0 font-mono text-xs overflow-auto">
       
       {/* Output Heading */}
-      <div className="absolute top-2 left-3 text-[0.90rem] uppercase tracking-wider text-green-400 border-b border-[green] pb-0.5">
+      <div className="
+        h-9
+        sticky top-0 z-10
+        bg-[#333333]
+        border-b border-[green]
+        px-3 py-2
+        text-[0.75rem] uppercase tracking-wider
+        text-green-300
+        font-bold
+      ">
         Output
       </div>
 
       {/* Spacer so content doesn't overlap heading */}
-      <div className="pt-4">
+      <div className="p-4">
         {results.map((res, idx) => {
           const { pageData } = res;
           const columns =

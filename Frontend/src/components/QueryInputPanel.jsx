@@ -23,7 +23,10 @@ const QueryInputPanel = ({ onExecute,onSaved }) => {
     "😄 Coffee in hand? Let’s query some data!"
   ];
 
-  const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+  const [randomGreeting] = useState(() =>
+    greetings[Math.floor(Math.random() * greetings.length)]
+  );
+
 
 
   useEffect(() => {

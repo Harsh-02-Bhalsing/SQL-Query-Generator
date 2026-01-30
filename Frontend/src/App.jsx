@@ -7,6 +7,8 @@ import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import Dashboard from "./pages/Dashboard"
 import PrivateLayout from "./layouts/PrivateLayout";
+import QueryDetailPage from "./pages/QueryDetail";
+
 function App() {
   return (
     <AuthProvider>
@@ -20,6 +22,7 @@ function App() {
         <Route element={<PrivateLayout/>}>
           <Route element={<PrivateRoute/>}>
             <Route path="/dashboard" element={<Dashboard/>}/>
+            <Route path="/queries/:id" element={<QueryDetailPage />} />
           </Route>
         </Route>
       </Routes>
