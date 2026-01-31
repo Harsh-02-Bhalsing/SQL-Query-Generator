@@ -12,10 +12,7 @@ const SchemaViewer = () => {
     const fetchSchema = async () => {
       const token = await currentUser.getIdToken();
       try {
-        // const res = await fetch(`${API_BASE_URL}/api/database/schema`,
-        //   method: "GET",
-        //   headers: { Authorization: `Bearer ${token}`, }
-        // );
+       
         const res = await fetch(`${API_BASE_URL}/api/database/schema`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}`, }
