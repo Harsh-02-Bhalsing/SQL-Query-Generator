@@ -28,7 +28,12 @@ const QueryInputPanel = ({ onExecute,onSaved }) => {
     greetings[Math.floor(Math.random() * greetings.length)]
   );
 
-
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !loading) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -166,6 +171,7 @@ const QueryInputPanel = ({ onExecute,onSaved }) => {
           
           <input
             value={input}
+            onKeyDown={handleKeyDown}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask your question in natural language..."
             disabled={loading}

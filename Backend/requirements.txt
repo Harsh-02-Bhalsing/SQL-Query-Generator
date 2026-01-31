@@ -6,3 +6,4 @@ sqlalchemy
 langchain
 langchain_community
 langchain-google-genai
+firebase-admin
