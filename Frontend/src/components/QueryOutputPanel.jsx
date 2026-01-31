@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 const PAGE_SIZE = 20;
 
 const QueryOutputPanel = ({ executions }) => {
@@ -23,7 +24,7 @@ const QueryOutputPanel = ({ executions }) => {
 
   const executeQuery = async (userId,query_id,query, explanation, page) => {
     console.log(userId,"and",query_id)
-    const res = await fetch("http://localhost:8000/api/queries/execute", {
+    const res = await fetch(`${API_BASE_URL}/api/queries/execute`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -51,7 +52,7 @@ const QueryOutputPanel = ({ executions }) => {
   const updatePage = async (index, nextPage) => {
     const item = results[index];
     console.log(userId,item.query_id)
-    const res = await fetch("http://localhost:8000/api/queries/execute", {
+    const res = await fetch(`${API_BASE_URL}/api/queries/execute`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

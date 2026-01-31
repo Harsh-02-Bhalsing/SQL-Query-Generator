@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import SavedQueryCell from "./SavedQueryCell";
+import { API_BASE_URL } from "../config/api";
 
 const SavedQueries = ({ onExecute, refreshKey }) => {
   const { userId } = useAuth();
@@ -14,7 +15,7 @@ const SavedQueries = ({ onExecute, refreshKey }) => {
     const fetchSavedQueries = async () => {
       try {
         const res = await fetch(
-          "http://localhost:8000/api/queries",
+          `${API_BASE_URL}/api/queries`,
           {
             method: "POST",
             headers: {

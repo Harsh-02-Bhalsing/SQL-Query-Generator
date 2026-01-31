@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import GeneratedQueryCard from "./GeneratedQueryCard";
 import ErrorResponseCard from "./ErrorResponseCard";
+import { API_BASE_URL } from "../config/api";
 
 const QueryInputPanel = ({ onExecute,onSaved }) => {
 
@@ -40,7 +41,7 @@ const QueryInputPanel = ({ onExecute,onSaved }) => {
   const sendQueryToBackend = async ({ user_id,query }) => {
     
 
-    const response = await fetch("http://localhost:8000/api/queries/generate", {
+    const response = await fetch(`${API_BASE_URL}/api/queries/generate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

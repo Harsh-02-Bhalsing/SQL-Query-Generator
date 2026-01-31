@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -18,7 +19,7 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
   const handleExecute = () => {
     onExecute({
       query: query.sql_query,
-      explanation: query.natural_language_query,
+      explanation: query.details,
       query_id:query.query_id,
     });
   };
@@ -29,7 +30,7 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
 
     try {
       const res = await fetch(
-        `http://localhost:8000/api/queries/${query.query_id}`,
+        `${API_BASE_URL}/api/queries/${query.query_id}`,
         {
           method: "DELETE",
           headers: {

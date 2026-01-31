@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../config/api";
 
 const SchemaViewer = () => {
   const [schema, setSchema] = useState(null);
@@ -8,7 +9,7 @@ const SchemaViewer = () => {
   useEffect(() => {
     const fetchSchema = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/database/schema");
+        const res = await fetch(`${API_BASE_URL}/api/database/schema`);
         const data = await res.json();
         setSchema(data);
       } catch {

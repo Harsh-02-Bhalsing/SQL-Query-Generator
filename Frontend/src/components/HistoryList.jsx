@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import HistoryItem from "./HistoryItem";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 
 const HistoryList = () => {
   const { userId } = useAuth();
@@ -11,7 +12,7 @@ const HistoryList = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/queries/history", {
+        const res = await fetch(`${API_BASE_URL}/api/queries/history`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: userId }),

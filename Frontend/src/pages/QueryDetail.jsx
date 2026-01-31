@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import QueryDescriptionPanel from "../components/QueryDescriptionPanel";
 import QueryOutputPanel from "../components/QueryOutputPanel";
+import { API_BASE_URL } from "../config/api";
 
 const QueryDetailPage = () => {
   const { id } = useParams();
@@ -18,7 +19,7 @@ const QueryDetailPage = () => {
   useEffect(() => {
     const fetchQueryDetail = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/queries/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/api/queries/${id}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_id: userId }),

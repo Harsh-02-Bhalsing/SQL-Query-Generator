@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 
 const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
   const { userId } = useAuth();
@@ -17,7 +18,7 @@ const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
   /* ---------- API Call ---------- */
   const saveQuery = async (titleValue) => {
     console.log(data.details)
-    const response = await fetch("http://localhost:8000/api/queries/save", {
+    const response = await fetch(`${API_BASE_URL}/api/queries/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
