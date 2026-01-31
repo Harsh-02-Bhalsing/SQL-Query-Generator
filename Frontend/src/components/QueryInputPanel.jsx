@@ -7,7 +7,7 @@ import { API_BASE_URL } from "../config/api";
 const QueryInputPanel = ({ onExecute,onSaved }) => {
 
   const { userId } = useAuth();
-
+  const {currentUser}= useAuth();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,15 +40,16 @@ const QueryInputPanel = ({ onExecute,onSaved }) => {
   /* ---------------- Mock API ---------------- */
   const sendQueryToBackend = async ({ user_id,query }) => {
     
+    const token = await currentUser.getIdToken();
 
     const response = await fetch(`${API_BASE_URL}/api/queries/generate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         query:query,
-        user_id:userId // ✅ ONLY query
       }),
     });
 

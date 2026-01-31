@@ -4,12 +4,14 @@ import { API_BASE_URL } from "../config/api";
 
 const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
   const { userId } = useAuth();
+  const { currentUser } = useAuth();
 
   const [expanded, setExpanded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("idle"); // idle | saved
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [title, setTitle] = useState("");  
+  
 
   const copyQuery = () => {
     navigator.clipboard.writeText(data.query);
@@ -17,15 +19,16 @@ const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
 
   /* ---------- API Call ---------- */
   const saveQuery = async (titleValue) => {
-    console.log(data.details)
+    const token = await currentUser.getIdToken();
+    
     const response = await fetch(`${API_BASE_URL}/api/queries/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         query_id: data.res_id,
-        user_id: userId,
         natural_language_query: data.natural_language_query,
         sql_query: data.query,
         title: titleValue,

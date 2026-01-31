@@ -19,11 +19,15 @@ from routers import queries as query_router
 from routers import database as database_router
 from db.app_db.application_database import Base
 from db.app_db.application_database import engine as app_db_engine
+from core.firebase import initialize_firebase
 
 Base.metadata.create_all(bind=app_db_engine)
 
 app = FastAPI(title="Backend API", version="0.1.0")
 
+@app.on_event("startup")
+def startup():
+    initialize_firebase()
 
 app.add_middleware(
     CORSMiddleware,

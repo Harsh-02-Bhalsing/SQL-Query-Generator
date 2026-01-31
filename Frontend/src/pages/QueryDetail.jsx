@@ -8,6 +8,7 @@ import { API_BASE_URL } from "../config/api";
 const QueryDetailPage = () => {
   const { id } = useParams();
   const { userId } = useAuth();
+  const { currentUser } = useAuth();
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
 
 
@@ -18,11 +19,13 @@ const QueryDetailPage = () => {
 
   useEffect(() => {
     const fetchQueryDetail = async () => {
+
+      const token = await currentUser.getIdToken();
+
       try {
         const res = await fetch(`${API_BASE_URL}/api/queries/${id}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId }),
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}`, }
         });
 
         const data = await res.json();

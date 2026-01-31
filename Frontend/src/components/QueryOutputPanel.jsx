@@ -6,12 +6,12 @@ const PAGE_SIZE = 20;
 const QueryOutputPanel = ({ executions }) => {
   const [results, setResults] = useState([]);
   const bottomRef = useRef(null);
-  const { userId } = useAuth();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     if (executions.length === 0) return;
     const last = executions[executions.length - 1];
-    executeQuery(userId,last.query_id,last.query, last.explanation, 1);
+    executeQuery(last.query_id,last.query, last.explanation, 1);
   }, [executions]);
   useEffect(() => {
     if (!bottomRef.current) return;
@@ -22,13 +22,17 @@ const QueryOutputPanel = ({ executions }) => {
     });
   }, [results]);
 
-  const executeQuery = async (userId,query_id,query, explanation, page) => {
-    console.log(userId,"and",query_id)
+  const executeQuery = async (query_id,query, explanation, page) => {
+
+    const token = await currentUser.getIdToken();
+
     const res = await fetch(`${API_BASE_URL}/api/queries/execute`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
-        user_id:userId,
         query_id:query_id,
         query,
         page,
@@ -51,12 +55,15 @@ const QueryOutputPanel = ({ executions }) => {
 
   const updatePage = async (index, nextPage) => {
     const item = results[index];
-    console.log(userId,item.query_id)
+    const token = await currentUser.getIdToken();
     const res = await fetch(`${API_BASE_URL}/api/queries/execute`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+
+      },
       body: JSON.stringify({
-        user_id:userId,
         query_id:item.query_id,
         query: item.query,
         page: nextPage,

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config/api";
+import { useAuth } from "../context/AuthContext";
 const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
+
+  const { currentUser } = useAuth();
+
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
@@ -29,14 +33,15 @@ const SavedQueryCell = ({ query, onExecute, onDeleted }) => {
     setError("");
 
     try {
+      const token = await currentUser.getIdToken();
+
       const res = await fetch(
         `${API_BASE_URL}/api/queries/${query.query_id}`,
         {
           method: "DELETE",
           headers: {
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ user_id: query.user_id }),
         }
       );
 

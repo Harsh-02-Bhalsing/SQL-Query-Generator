@@ -3,10 +3,6 @@ from datetime import datetime
 from typing import List, Optional
 
 
-class QueryHistoryRequest(BaseModel):
-    user_id: str
-
-
 class QueryHistoryResponse(BaseModel):
     id: int
     query_id:str

@@ -1,15 +1,25 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config/api";
+import { useAuth } from "../context/AuthContext";
 
 const SchemaViewer = () => {
+  const { currentUser } = useAuth();
   const [schema, setSchema] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchSchema = async () => {
+      const token = await currentUser.getIdToken();
       try {
-        const res = await fetch(`${API_BASE_URL}/api/database/schema`);
+        // const res = await fetch(`${API_BASE_URL}/api/database/schema`,
+        //   method: "GET",
+        //   headers: { Authorization: `Bearer ${token}`, }
+        // );
+        const res = await fetch(`${API_BASE_URL}/api/database/schema`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}`, }
+        });
         const data = await res.json();
         setSchema(data);
       } catch {

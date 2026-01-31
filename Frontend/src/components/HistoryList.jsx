@@ -8,15 +8,26 @@ const HistoryList = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { currentUser } = useAuth();
 
   useEffect(() => {
+    if (!currentUser) return;
+
     const fetchHistory = async () => {
       try {
+        // 🔐 Get Firebase ID token
+        const token = await currentUser.getIdToken();
+
         const res = await fetch(`${API_BASE_URL}/api/queries/history`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: userId }),
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ token in header
+          },
         });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch history");
+        }
 
         const data = await res.json();
         setHistory(data.history);

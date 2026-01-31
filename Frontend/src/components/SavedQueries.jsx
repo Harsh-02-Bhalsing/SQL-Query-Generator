@@ -5,25 +5,25 @@ import { API_BASE_URL } from "../config/api";
 
 const SavedQueries = ({ onExecute, refreshKey }) => {
   const { userId } = useAuth();
+  const {currentUser} = useAuth();
   const [queries, setQueries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!userId) return;
+    if (!currentUser) return;
 
     const fetchSavedQueries = async () => {
       try {
+        const token = await currentUser.getIdToken();
+
         const res = await fetch(
           `${API_BASE_URL}/api/queries`,
           {
-            method: "POST",
+            method: "GET",
             headers: {
-              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-              user_id: userId,
-            }),
           }
         );
         const data = await res.json();

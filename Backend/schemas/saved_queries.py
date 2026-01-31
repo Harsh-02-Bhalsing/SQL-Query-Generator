@@ -9,12 +9,6 @@ class SaveQueryRequest(BaseModel):
         description="Client-provided unique identifier for the saved query",
     )
 
-    user_id: str = Field(
-        ...,
-        description="Firebase user ID associated with the saved query",
-        min_length=1,
-    )
-
     natural_language_query: str = Field(
         ...,
         description="Original natural language input used to generate the SQL query",
@@ -47,15 +41,6 @@ class SaveQueryRequest(BaseModel):
 
 
 
-
-
-class GetSavedQueriesRequest(BaseModel):
-    user_id: str = Field(
-        ...,
-        description="Firebase user ID whose saved queries should be fetched",
-        min_length=1,
-    )
-
 class SavedQueryItem(BaseModel):
     query_id: str
     user_id: str
@@ -71,9 +56,3 @@ class GetSavedQueriesResponse(BaseModel):
     queries: List[SavedQueryItem]
 
 
-class DeleteSavedQueryRequest(BaseModel):
-    user_id: str = Field(
-        ...,
-        description="Firebase user ID whose saved queries should be fetched",
-        min_length=1,
-    )
