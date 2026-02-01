@@ -44,7 +44,7 @@ const SavedQueries = ({ onExecute, refreshKey }) => {
   }, [userId,refreshKey]);
 
   return (
-    <div className="flex flex-col w-full h-full p-3 gap-3 overflow-y-auto">
+    <div className="flex flex-col w-full h-full p-3 gap-3 overflow-y-auto custom-scrollbar">
       <h2 className="flex items-center gap-2 text-[.850rem] uppercase tracking-wider font-semibold">
         <span className="text-gray-400">📂</span>
         <span className="bg-gradient-to-r from-gray-200 to-gray-500 bg-clip-text text-transparent">

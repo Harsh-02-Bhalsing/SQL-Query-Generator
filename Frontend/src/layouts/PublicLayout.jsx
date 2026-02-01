@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 
 const PublicLayout = () => {
   return (
-    <div className="min-h-screen bg-[#121212] flex flex-col">
+    <div className="min-h-screen bg-[#121212] flex flex-col overflow-x-hidden">
       <PublicNavbar />
       <main className="flex-grow">
         <Outlet />
