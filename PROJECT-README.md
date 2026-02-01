@@ -83,6 +83,7 @@ The application supports query generation, execution, saving, history tracking, 
 | Dashboard | `/dashboard` | Yes | Main workspace (query input, saved queries, output) |
 | Query Detail | `/queries/:id` | Yes | View and rerun saved query |
 | History | `/history` | Yes | View query execution history |
+| Schema | `/schema` | Yes | View Database Schema | 
 
 ---
 
