@@ -24,7 +24,7 @@ class SaveQueryRequest(BaseModel):
     title: Optional[str] = Field(
         None,
         description="Optional user-defined title for the saved query",
-        max_length=255,
+        max_length=500,
     )
 
     language:Optional[str]=Field(
@@ -36,7 +36,7 @@ class SaveQueryRequest(BaseModel):
     details:Optional[str]=Field(
         None,
         description="Explanation about the query",
-        max_length=500,
+        max_length=2000,
     )
 
 
