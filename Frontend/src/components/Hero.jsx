@@ -1,3 +1,4 @@
+import {Link} from "react-router-dom"
 const Hero = () => {
   return (
     <section className="relative bg-[#0b0b0b] overflow-hidden">
@@ -32,8 +33,8 @@ const Hero = () => {
         </p>
 
         <div className="mt-12 flex items-center justify-center gap-4">
-          <a
-            href="/signup"
+          <Link
+            to="/signup"
             className="
               px-7 py-3 rounded-xl
               bg-white text-black
@@ -43,7 +44,7 @@ const Hero = () => {
             "
           >
             Get Started
-          </a>
+          </Link>
 
           <a
             href="#features"
