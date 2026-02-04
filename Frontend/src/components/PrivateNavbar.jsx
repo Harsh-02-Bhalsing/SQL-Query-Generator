@@ -19,7 +19,7 @@ const PrivateNavbar = () => {
 
   return (
     <nav className="w-full bg-[#161616] border-b border-[#2a2a2a] overflow-x-hidden">
-      <div className="w-full px-4 sm:px-6 h-auto sm:h-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="w-full px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
         
         {/* Logo */}
         <Link to="/dashboard" className="flex items-center gap-2">
@@ -69,7 +69,7 @@ const PrivateNavbar = () => {
           </div>
 
           {/* User Email */}
-          <span className="text-xs text-gray-400 max-w-full sm:max-w-[180px] truncate">
+          <span className="hidden sm:block text-xs text-gray-400 max-w-[160px] truncate">
             {userEmail}
           </span>
 
