@@ -57,12 +57,12 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="h-screen flex bg-[#1e1e1e] text-white">
+    <div className="h-screen flex bg-[#1e1e1e] text-white overflow-hidden">
       {/* Sidebar */}
       {isSidebarOpen ? (
         <div
           style={{ width: `${sidebarWidth}%` }}
-          className="bg-[#252526] border-r border-[#333] relative flex"
+          className="bg-[#252526] border-r border-[#333] relative flex min-w-[240px] max-w-[50%]"
         >
           <SavedQueries
             onExecute={handleExecuteQuery}
@@ -95,7 +95,7 @@ const Dashboard = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Input Section */}
         <div style={{ height: `${topHeight}%` }} >
           <QueryInputPanel

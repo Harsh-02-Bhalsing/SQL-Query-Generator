@@ -166,7 +166,7 @@ const QueryInputPanel = ({ onExecute,onSaved }) => {
       
 
       {/* Input Area */}
-      <div className="px-10 pb-3 flex items-center justify-center">
+      <div className="px-4 pb-3 flex items-center justify-center">
         <div className="flex items-center gap-3 w-full max-w-[95%] sm:max-w-[90%] md:max-w-[85%]">
           
           <input

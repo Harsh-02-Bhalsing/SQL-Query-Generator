@@ -18,8 +18,8 @@ const PrivateNavbar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="w-full bg-[#161616] border-b border-[#2a2a2a]">
-      <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+    <nav className="w-full bg-[#161616] border-b border-[#2a2a2a] overflow-x-hidden">
+      <div className="w-full px-4 sm:px-6 h-auto sm:h-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         
         {/* Logo */}
         <Link to="/dashboard" className="flex items-center gap-2">
@@ -34,10 +34,12 @@ const PrivateNavbar = () => {
         </Link>
 
         {/* Right Section */}
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 justify-end">
+
           
           {/* Navigation */}
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center gap-4">
+
             {!isActive("/dashboard") && (
               <Link
                 to="/dashboard"
@@ -67,7 +69,7 @@ const PrivateNavbar = () => {
           </div>
 
           {/* User Email */}
-          <span className="text-xs text-gray-400 max-w-[180px] truncate">
+          <span className="text-xs text-gray-400 max-w-full sm:max-w-[180px] truncate">
             {userEmail}
           </span>
 
