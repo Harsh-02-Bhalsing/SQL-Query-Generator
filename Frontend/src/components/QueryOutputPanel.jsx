@@ -1,10 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
+
 const PAGE_SIZE = 20;
 
 const QueryOutputPanel = ({ executions }) => {
   const [results, setResults] = useState([]);
+  const [isExecuting, setIsExecuting] = useState(false);
+
   const bottomRef = useRef(null);
   const { currentUser } = useAuth();
 
@@ -23,7 +26,8 @@ const QueryOutputPanel = ({ executions }) => {
   }, [results]);
 
   const executeQuery = async (query_id,query, explanation, page) => {
-
+    setIsExecuting(true); 
+    
     const token = await currentUser.getIdToken();
 
     const res = await fetch(`${API_BASE_URL}/api/queries/execute`, {
@@ -51,6 +55,9 @@ const QueryOutputPanel = ({ executions }) => {
         pageData: data,
       },
     ]);
+    setTimeout(() => {
+      setIsExecuting(false);
+    }, 500); 
   };
 
   const updatePage = async (index, nextPage) => {
@@ -92,11 +99,18 @@ const QueryOutputPanel = ({ executions }) => {
         bg-[#333333]
         border-b border-[green]
         px-3 py-2
+        flex items-center justify-between
         text-[0.75rem] uppercase tracking-wider
         text-green-300
         font-bold
-      ">
-        Output
+      "> 
+        <span>Output</span>
+        {isExecuting && (
+          <div className="flex items-center gap-2 text-green-300">
+            <span className="text-[0.7rem] lowercase tracking-wider">Executing</span>
+            <span className="h-3 w-3 border-2 border-green-300 border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
       </div>
 
       {/* Spacer so content doesn't overlap heading */}
