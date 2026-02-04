@@ -55,9 +55,9 @@ const QueryOutputPanel = ({ executions }) => {
         pageData: data,
       },
     ]);
-    setTimeout(() => {
-      setIsExecuting(false);
-    }, 500); 
+    
+    setIsExecuting(false);
+    
   };
 
   const updatePage = async (index, nextPage) => {
