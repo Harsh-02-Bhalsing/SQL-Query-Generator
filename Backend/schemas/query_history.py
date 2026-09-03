@@ -9,8 +9,8 @@ class QueryHistoryResponse(BaseModel):
     user_id:str
     sql_query: str
     description: Optional[str]
-    total_rows: int
-    total_pages: int
+    total_rows: Optional[int] = None
+    total_pages: Optional[int] = None
     executed_at: datetime
 
 
