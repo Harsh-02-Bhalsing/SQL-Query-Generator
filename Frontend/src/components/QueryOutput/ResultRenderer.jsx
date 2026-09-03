@@ -1,5 +1,5 @@
-import DQLResult   from "./DQLResult";
-import DMLResult   from "./DMLResult";
+import DQLResult   from "./DqlResult";
+import DMLResult   from "./DmlResult";
 import StatusResult from "./StatusResult";
 
 /**
