@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException,Depends
 from sqlalchemy.exc import SQLAlchemyError
 from services.schema_extractor import get_database_schema
 from schemas.database_schema import DatabaseSchemaResponse
-from dependencies.auth import get_current_user_id
+from dependencies.auth import get_current_user
 
 router = APIRouter(
     prefix="/api/database",
@@ -11,8 +11,10 @@ router = APIRouter(
 
 @router.get("/schema", response_model=DatabaseSchemaResponse)
 def fetch_database_schema(
-    user_id: str = Depends(get_current_user_id),
+    current_user: str = Depends(get_current_user),
 ):
+    user_id = current_user["uid"]
+    role = current_user["role"]
     try:
         return get_database_schema()
 

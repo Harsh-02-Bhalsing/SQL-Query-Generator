@@ -1,6 +1,6 @@
 from fastapi import APIRouter,HTTPException,Depends
 from schemas.generate_sql import GenerateSQLRequest,GenerateSQLResponse
-from services.sql_generator import generate_sql,format_generate_sql_response
+from services.sql_generator import generate_sql,format_generate_sql_response,validate_sql_query
 import json
 from db.user_db.user_database import get_db
 from schemas.execute_sql import QueryRequest
@@ -9,12 +9,12 @@ from services.query_executer import execute_query
 from schemas.saved_queries import SaveQueryRequest
 from db.app_db.application_database import get_db as get_app_db
 from models.saved_queries import DbSavedQuery
-from sqlalchemy.orm import Session
 from schemas.saved_queries import GetSavedQueriesResponse,SavedQueryItem
 from schemas.query_detail import QueryDetailResponse
 from schemas.query_history import QueryHistoryResponse,QueryHistoryListResponse
 from models.query_history import QueryExecutionHistory
-from dependencies.auth import get_current_user_id
+from dependencies.auth import get_current_user
+from sqlalchemy.exc import SQLAlchemyError
 
 router=APIRouter(
   prefix="/api/queries",
@@ -24,9 +24,11 @@ router=APIRouter(
 
 @router.get("/", response_model=GetSavedQueriesResponse)
 def get_saved_queries(
-    user_id: str = Depends(get_current_user_id),
+    current_user: str = Depends(get_current_user),
     db: Session = Depends(get_app_db),
 ):
+    user_id = current_user["uid"]
+    role = current_user["role"]
     try:
         saved_queries = (
             db.query(DbSavedQuery)
@@ -62,15 +64,18 @@ def get_saved_queries(
 @router.post("/generate",response_model=GenerateSQLResponse)
 def generate_sql_query(
   request:GenerateSQLRequest,
-  user_id: str = Depends(get_current_user_id),
+  current_user: str = Depends(get_current_user),
 ):
+  user_id = current_user["uid"]
+  role = current_user["role"]
   try:
-    llm_response = generate_sql(request.query)
+    llm_response = generate_sql(request.query,role)
 
     return format_generate_sql_response(
       llm_response=llm_response,
       user_id=user_id,
-      natural_language_query=request.query
+      natural_language_query=request.query,
+      role=role
     )
   except Exception as e:
     # Log e in real apps
@@ -85,19 +90,23 @@ def run_query(
   payload: QueryRequest,
   db: Session = Depends(get_db),
   app_db:Session=Depends(get_app_db),
-  user_id: str = Depends(get_current_user_id),
+  current_user: str = Depends(get_current_user),
 ):
+  user_id = current_user["uid"]
+  role = current_user["role"]
   query = payload.query.strip()
-
-
-  # ---- Hard safety check (VERY important) ----
-  if not query.lower().startswith("select"):
+ 
+ 
+  # ---- Hard safety check — role-aware (VERY important, never skip) ----
+  try:
+    validate_sql_query(query, role)
+  except ValueError as e:
     raise HTTPException(
-      status_code=400,
-      detail="Only SELECT queries are allowed.",
+      status_code=403,
+      detail=str(e),
     )
-
-
+ 
+ 
   try:
     return execute_query(
       db=db,
@@ -108,8 +117,8 @@ def run_query(
       page=payload.page,
       page_size=payload.page_size,
     )
-
-
+ 
+ 
   except Exception as e:
     raise HTTPException(
       status_code=500,
@@ -117,16 +126,15 @@ def run_query(
     )
   
 
-from fastapi import HTTPException, Depends
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import SQLAlchemyError
-
 @router.post("/save")
 def save_query(
     request: SaveQueryRequest,
     db: Session = Depends(get_app_db),
-    user_id: str = Depends(get_current_user_id),
+    current_user: str = Depends(get_current_user),
 ):
+    user_id = current_user["uid"]
+    role = current_user["role"]
+
     # Check if query already saved for this user
     existing_query = (
         db.query(DbSavedQuery)
@@ -174,9 +182,11 @@ def save_query(
     
 @router.get("/history", response_model=QueryHistoryListResponse)
 def get_query_history(
-    user_id: str = Depends(get_current_user_id),
+    current_user: str = Depends(get_current_user),
     db: Session = Depends(get_app_db),
 ):
+    user_id = current_user["uid"]
+    role = current_user["role"]
     try:
         history = (
             db.query(QueryExecutionHistory)
@@ -196,9 +206,11 @@ def get_query_history(
 @router.delete("/{query_id}")
 def delete_saved_query(
     query_id: str,
-    user_id: str = Depends(get_current_user_id),
+    current_user: str = Depends(get_current_user),
     db: Session = Depends(get_app_db),
 ):
+    user_id = current_user["uid"]
+    role = current_user["role"]
     saved_query = (
         db.query(DbSavedQuery)
         .filter(
@@ -229,9 +241,11 @@ def delete_saved_query(
 @router.get("/{query_id}", response_model=QueryDetailResponse)
 def get_query_detail(
     query_id: str,
-    user_id: str = Depends(get_current_user_id),
+    current_user: str = Depends(get_current_user),
     db: Session = Depends(get_app_db),
 ):
+    user_id = current_user["uid"]
+    role = current_user["role"]
     try:
         saved_query = (
             db.query(DbSavedQuery)

@@ -8,34 +8,38 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
   const [userId, setUserId] = useState(null);
-  const [loading, setLoading] = useState(true); // important for protected routes
+  const [userRole, setUserRole] = useState(null);         // NEW
+  const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // User is logged in
+        // Fetch token with custom claims (forceRefresh=true ensures latest claims)
+        const idTokenResult = await user.getIdTokenResult(true);  // NEW
+        const role = idTokenResult.claims.role ?? "user";          // NEW — default to "user"
+
         setIsAuthenticated(true);
         setUserEmail(user.email);
         setUserId(user.uid);
         setCurrentUser(user);
+        setUserRole(role);                                          // NEW
       } else {
-        // User is logged out
         setIsAuthenticated(false);
         setUserEmail(null);
         setUserId(null);
-        setCurrentUser(null)
+        setCurrentUser(null);
+        setUserRole(null);                                          // NEW
       }
       setLoading(false);
     });
 
-    // Cleanup listener on unmount
     return () => unsubscribe();
   }, []);
 
   const logout = async () => {
     await signOut(auth);
-    // State will be cleared automatically by onAuthStateChanged
+    // State cleared automatically by onAuthStateChanged
   };
 
   return (
@@ -44,6 +48,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         userEmail,
         userId,
+        userRole,       // NEW — exposed to consumers
         logout,
         loading,
         currentUser,

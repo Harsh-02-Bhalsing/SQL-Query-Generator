@@ -3,8 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { API_BASE_URL } from "../config/api";
 
 const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
-  const { userId } = useAuth();
-  const { currentUser } = useAuth();
+  const { userId, currentUser, userRole } = useAuth();
 
   const [expanded, setExpanded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -114,10 +113,19 @@ const GeneratedQueryCard = ({ data, onExecute, onSaved }) => {
             onExecute({
               query: data.query,
               explanation: data.details,
-              query_id:data.res_id,
+              query_id: data.res_id,
             })
           }
-          className="px-3 py-1.5 text-xs rounded-md bg-[#2d2d2d] hover:bg-[#3a3a3a] transition"
+          disabled={
+            // Admin can execute any SQL type; user is restricted to DQL only
+            userRole !== "admin" && data.language?.toUpperCase() !== "DQL"
+          }
+          title={
+            userRole !== "admin" && data.language?.toUpperCase() !== "DQL"
+              ? `${data.language} execution requires admin privileges`
+              : undefined
+          }
+          className="px-3 py-1.5 text-xs rounded-md bg-[#2d2d2d] hover:bg-[#3a3a3a] transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#2d2d2d]"
         >
           Execute
         </button>
