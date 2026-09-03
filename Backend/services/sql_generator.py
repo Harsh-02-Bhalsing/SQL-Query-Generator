@@ -1,68 +1,137 @@
-from services.chains import sql_generation_chain
-from db.user_db.user_db_schema import schema_text
+from services.chains import user_sql_generation_chain, admin_sql_generation_chain
+from services.schema_extractor import get_database_schema
 import json
 import uuid
 import re
 
-FORBIDDEN_KEYWORDS = [
-    "DROP",
-    "DELETE",
-    "UPDATE",
+# ─────────────────────────────────────────────────────────────
+#  KEYWORD SETS
+# ─────────────────────────────────────────────────────────────
+
+# Keywords that are NEVER allowed regardless of role
+# (prevents SQL injection / stacked attacks)
+ALWAYS_FORBIDDEN = [
+    "EXEC",
+    "EXECUTE",
+    "CALL",
+    "LOAD_FILE",
+    "INTO OUTFILE",
+    "INTO DUMPFILE",
+    "SLEEP",
+    "BENCHMARK",
+    "INFORMATION_SCHEMA",
+    "PG_READ_FILE",
+]
+
+# Keywords blocked for regular users only
+USER_FORBIDDEN = [
     "INSERT",
+    "UPDATE",
+    "DELETE",
+    "DROP",
     "ALTER",
     "TRUNCATE",
     "CREATE",
-    "REPLACE"
+    "REPLACE",
+    "MERGE",
+    "GRANT",
+    "REVOKE",
+    "RENAME",
 ]
 
-def validate_sql_query(query: str) -> None:
-    """
-    Validates generated SQL query for safety.
-    Raises ValueError if query is unsafe.
-    """
+# SQL types that are destructive — admin gets an extra warning surfaced upstream
+DESTRUCTIVE_KEYWORDS = ["DROP", "DELETE", "TRUNCATE"]
 
-    if not query:
+
+# ─────────────────────────────────────────────────────────────
+#  VALIDATOR
+# ─────────────────────────────────────────────────────────────
+
+def validate_sql_query(query: str, role: str = "user") -> None:
+    """
+    Validates the generated SQL query based on the caller's role.
+
+    User  → SELECT only; no DML/DDL/DCL keywords allowed.
+    Admin → All SQL types allowed; universal injection guards still apply.
+
+    Raises ValueError with a descriptive message if validation fails.
+    """
+    if not query or not query.strip():
         raise ValueError("Empty SQL query generated")
 
     normalized = query.strip().upper()
 
-    # 1️⃣ Must start with SELECT
-    if not normalized.startswith("SELECT"):
-        raise ValueError("Only SELECT queries are allowed")
+    # ── 1. Block SQL comments (universal) ───────────────────
+    if "--" in normalized or "/*" in normalized or "*/" in normalized:
+        raise ValueError("SQL comments are not allowed in generated queries")
 
-    # 2️⃣ Block forbidden keywords
-    for keyword in FORBIDDEN_KEYWORDS:
-        if re.search(rf"\b{keyword}\b", normalized):
-            raise ValueError(f"Unsafe SQL operation detected: {keyword}")
-
-    # 3️⃣ Block multiple statements
-    if ";" in normalized[:-1]:
+    # ── 2. Block multiple statements (universal) ─────────────
+    #    Allow a trailing semicolon (common in generated SQL) but not mid-query ones
+    if ";" in normalized.rstrip(";"):
         raise ValueError("Multiple SQL statements are not allowed")
 
-    # 4️⃣ Block SQL comments
-    if "--" in normalized or "/*" in normalized or "*/" in normalized:
-        raise ValueError("SQL comments are not allowed")
-    
+    # ── 3. Block universally dangerous keywords ──────────────
+    for keyword in ALWAYS_FORBIDDEN:
+        pattern = keyword.replace(" ", r"\s+")          # handle multi-word phrases
+        if re.search(rf"\b{pattern}\b", normalized):
+            raise ValueError(f"Forbidden SQL construct detected: {keyword}")
 
-def generate_sql(question: str):
+    # ── 4. Role-specific checks ──────────────────────────────
+    if role == "admin":
+        # Admins may run any standard SQL — no further keyword restrictions
+        return
 
-    response = sql_generation_chain.invoke({
-        "question": question,
-        "schema": schema_text
-    })
+    # User path: must start with SELECT
+    if not normalized.startswith("SELECT"):
+        raise ValueError(
+            "Only SELECT queries are permitted in user mode. "
+            "Please rephrase your question to request data retrieval."
+        )
 
+    # User path: block write/schema/permission keywords
+    for keyword in USER_FORBIDDEN:
+        if re.search(rf"\b{keyword}\b", normalized):
+            raise ValueError(
+                f"Operation not permitted in user mode: {keyword}. "
+                "Only read-only SELECT queries are allowed."
+            )
+
+
+# ─────────────────────────────────────────────────────────────
+#  SQL GENERATOR
+# ─────────────────────────────────────────────────────────────
+
+def generate_sql(question: str, role: str):
+
+    schema_json = get_database_schema()
+    schema_text = json.dumps(schema_json, indent=2)
+
+    if role == "admin":
+        response = admin_sql_generation_chain.invoke({
+            "question": question,
+            "schema": schema_text
+        })
+    else:
+        response = user_sql_generation_chain.invoke({
+            "question": question,
+            "schema": schema_text
+        })
     return response
 
 
+# ─────────────────────────────────────────────────────────────
+#  RESPONSE FORMATTER
+# ─────────────────────────────────────────────────────────────
 
 def format_generate_sql_response(
     llm_response: str,
     user_id: str,
-    natural_language_query:str
+    natural_language_query: str,
+    role: str,
 ) -> dict:
     res_id = f"que_{uuid.uuid4().hex[:8]}"
 
-    # 1️⃣ Parse JSON
+    # ── 1. Parse LLM JSON output ─────────────────────────────
     try:
         parsed = json.loads(llm_response)
     except json.JSONDecodeError:
@@ -72,47 +141,55 @@ def format_generate_sql_response(
             "data": {
                 "error": "Invalid response generated by LLM",
                 "suggestion": "Please try rephrasing your question.",
-                "natural_language_query":natural_language_query,
-                "res_id": res_id
+                "natural_language_query": natural_language_query,
+                "res_id": res_id,
             }
         }
 
-    # 2️⃣ SUCCESS CASE (query generated)
+    # ── 2. SUCCESS CASE — LLM produced a query ───────────────
     if "query" in parsed:
+        sql_query = parsed.get("query", "")
+
         try:
-            validate_sql_query(parsed.get("query"))
+            validate_sql_query(sql_query, role)          # role-aware validation
         except ValueError as e:
             return {
                 "status": 0,
                 "user_id": user_id,
                 "data": {
-                    "error": "Unsafe SQL query generated",
+                    "error": "Generated query failed safety validation",
                     "suggestion": str(e),
-                    "natural_language_query":natural_language_query,
-                    "res_id": res_id
+                    "natural_language_query": natural_language_query,
+                    "res_id": res_id,
                 }
             }
+
+        # Flag destructive queries in the response so the frontend can warn the admin
+        language = parsed.get("language", "").upper()
+        is_destructive = any(
+            kw in sql_query.upper() for kw in DESTRUCTIVE_KEYWORDS
+        )
 
         return {
             "status": 1,
             "user_id": user_id,
             "data": {
-                "query": parsed.get("query"),
+                "query": sql_query,
                 "details": parsed.get("details") or parsed.get("explanation"),
-                "language": parsed.get("language"),
-                "natural_language_query":natural_language_query,
-                "res_id": res_id
+                "language": language,
+                "natural_language_query": natural_language_query,
+                "res_id": res_id,
             }
         }
 
-    # 3️⃣ ERROR CASE (LLM says query cannot be generated)
+    # ── 3. ERROR CASE — LLM could not generate a query ───────
     return {
         "status": 0,
         "user_id": user_id,
         "data": {
             "error": parsed.get("error"),
             "suggestion": parsed.get("suggestion"),
-            "natural_language_query":natural_language_query,
-            "res_id": res_id
+            "natural_language_query": natural_language_query,
+            "res_id": res_id,
         }
     }

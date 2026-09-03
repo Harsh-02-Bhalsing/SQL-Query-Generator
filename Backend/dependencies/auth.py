@@ -1,7 +1,7 @@
 from fastapi import Header, HTTPException
 from firebase_admin import auth
 
-def get_current_user_id(authorization: str = Header(...)):
+def get_current_user(authorization: str = Header(...)):
     """
     Extracts and verifies Firebase ID token.
     Returns authenticated user's UID.
@@ -17,7 +17,10 @@ def get_current_user_id(authorization: str = Header(...)):
 
     try:
         decoded_token = auth.verify_id_token(token)
-        return decoded_token["uid"]
+        return {
+            "uid": decoded_token["uid"],
+            "role": decoded_token.get("role", "user")
+        }
 
     except Exception:
         raise HTTPException(

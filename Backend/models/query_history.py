@@ -12,7 +12,7 @@ class QueryExecutionHistory(Base):
     sql_query = Column(Text, nullable=False)
     description = Column(Text, nullable=True)
 
-    total_rows = Column(Integer, nullable=False)
-    total_pages = Column(Integer, nullable=False)
+    total_rows = Column(Integer, nullable=True)
+    total_pages = Column(Integer, nullable=True)
 
     executed_at = Column(DateTime(timezone=True), server_default=func.now())
