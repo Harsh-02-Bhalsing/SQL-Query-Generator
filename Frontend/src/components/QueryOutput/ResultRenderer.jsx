@@ -1,6 +1,6 @@
 import DQLResult   from "./DqlResult";
 import DMLResult   from "./DmlResult";
-import StatusResult from "./StatusResult";
+import StatusResult from "./Statusresult";
 
 /**
  * ResultRenderer
